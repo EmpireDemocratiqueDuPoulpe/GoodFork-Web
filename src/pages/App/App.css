@@ -1,0 +1,31 @@
+/* ---- App ------------------------------------- */
+/* -- App */
+.App {
+  display: flex;
+  flex-direction: row;
+  justify-items: flex-start;
+  align-items: stretch;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.App-header {
+  flex: 0 0 auto;
+  width: 20vw;
+  background: hotpink;
+}
+
+.App-body {
+  flex: 1;
+  background: khaki;
+}
+
+/* -- Pages */
+.Page-header {
+  height: 70px;
+  line-height: 70px;
+  padding-left: 10px;
+  background: darkcyan;
+}
+
+.Page-header h3 { margin: 0; }
