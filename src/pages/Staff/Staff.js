@@ -1,12 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
+import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
+import Users from "../../global/Users.js";
+import "./Staff.css";
 
 export default function Staff() {
-	const members = [
-		{ firstName: "Louan", lastName: "grosNoob", email: "louan.grosnoob@goodfork.fr", role: "barmen" },
-		{ firstName: "Maxence", lastName: "Puddlesky", email: "maxence.puddlesky@goodfork.fr", role: "cook" },
-		{ firstName: "Geoffrey", lastName: "", email: "geoffrey@goodfork.fr", role: "cook" },
-		{ firstName: "Imprimante multifonction", lastName: "EPSON Expression XP-2105", email: "imprimantemultifonction.epson@goodfork.fr", role: "waiter" }
-	];
+	const [ members, setMembers ] = useState();
+	const [ loaded, setLoaded ] = useState(false);
+	const [ error, setError ] = useState();
+
+	const getStaff = async () => {
+		Users.getStaff()
+			.then(response => {
+				setMembers(response.error ? null : response);
+				setLoaded(true);
+				setError(response.error ? response : null);
+			})
+			.catch(console.error);
+	};
+
+	const deleteStaff = async member => {
+		Users.deleteStaff(member)
+			.then(response => {
+				if (!response.error) {
+					getStaff();
+				} else {
+					setError(response);
+				}
+			})
+			.catch(console.error);
+	};
+
+	useEffect(() => { getStaff().catch(console.error); }, []);
 
 	return (
 		<React.Fragment>
@@ -15,28 +40,40 @@ export default function Staff() {
 			</div>
 
 			<div className="Page-body">
-				<table>
-					<thead>
-						<tr>
-							<th>Pr&eacute;nom</th>
-							<th>Nom</th>
-							<th>E-mail</th>
-							<th>R&ocirc;le</th>
-						</tr>
-					</thead>
-					<tbody>
-						{members.map((member, index) => {
-							return (
-								<tr key={index}>
-									<td>{member.firstName}</td>
-									<td>{member.lastName}</td>
-									<td>{member.email}</td>
-									<td>{member.role}</td>
-								</tr>
-							);
-						})}
-					</tbody>
-				</table>
+				{loaded ? (
+					<React.Fragment>
+						{error ? <ErrorDisplay error={error}/> : (
+							<React.Fragment>
+								<div className="staff-table-box">
+									<table>
+										<thead>
+											<tr>
+												<th>Pr&eacute;nom</th>
+												<th>Nom</th>
+												<th>E-mail</th>
+												<th>R&ocirc;le</th>
+												<th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											{members.map((member, index) => {
+												return (
+													<tr key={index}>
+														<td className="capitalize">{member.firstName}</td>
+														<td className="capitalize">{member.lastName}</td>
+														<td>{member.email}</td>
+														<td className="capitalize">{member.role}</td>
+														<td><div className="stb-delete" onClick={() => { deleteStaff(member).catch(console.error); }}/></td>
+													</tr>
+												);
+											})}
+										</tbody>
+									</table>
+								</div>
+							</React.Fragment>
+						)}
+					</React.Fragment>
+				) : <LoadingDisplay/>}
 			</div>
 		</React.Fragment>
 	);
