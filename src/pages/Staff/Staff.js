@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
+import AdvancedTable from "../../components/AdvancedTable/AdvancedTable.js";
 import Users from "../../global/Users.js";
 import "./Staff.css";
 
@@ -9,6 +10,21 @@ export default function Staff() {
 	const [ loaded, setLoaded ] = useState(false);
 	const [ error, setError ] = useState();
 
+	const addStaff = async member => {
+		Users.addStaff(member)
+			.then(response => {
+				if (!response.error) {
+					getStaff();
+				} else {
+					setError(response);
+				}
+			})
+			.catch(error => {
+				setError(error);
+				console.error(error);
+			});
+	};
+
 	const getStaff = async () => {
 		Users.getStaff()
 			.then(response => {
@@ -16,7 +32,27 @@ export default function Staff() {
 				setLoaded(true);
 				setError(response.error ? response : null);
 			})
-			.catch(console.error);
+			.catch(error => {
+				setMembers([]);
+				setLoaded(true);
+				setError(error);
+				console.error(error);
+			});
+	};
+
+	const updateStaff = async member => {
+		Users.update(member)
+			.then(response => {
+				if (!response.error) {
+					getStaff();
+				} else {
+					setError(response);
+				}
+			})
+			.catch(error => {
+				setError(error);
+				console.error(error);
+			});
 	};
 
 	const deleteStaff = async member => {
@@ -28,7 +64,10 @@ export default function Staff() {
 					setError(response);
 				}
 			})
-			.catch(console.error);
+			.catch(error => {
+				setError(error);
+				console.error(error);
+			});
 	};
 
 	useEffect(() => { getStaff().catch(console.error); }, []);
@@ -44,32 +83,19 @@ export default function Staff() {
 					<React.Fragment>
 						{error ? <ErrorDisplay error={error}/> : (
 							<React.Fragment>
-								<div className="staff-table-box">
-									<table>
-										<thead>
-											<tr>
-												<th>Pr&eacute;nom</th>
-												<th>Nom</th>
-												<th>E-mail</th>
-												<th>R&ocirc;le</th>
-												<th>Actions</th>
-											</tr>
-										</thead>
-										<tbody>
-											{members.map((member, index) => {
-												return (
-													<tr key={index}>
-														<td className="capitalize">{member.firstName}</td>
-														<td className="capitalize">{member.lastName}</td>
-														<td>{member.email}</td>
-														<td className="capitalize">{member.role}</td>
-														<td><div className="stb-delete" onClick={() => { deleteStaff(member).catch(console.error); }}/></td>
-													</tr>
-												);
-											})}
-										</tbody>
-									</table>
-								</div>
+								<AdvancedTable
+									headers={[
+										{ title: "ID", propName: "user_id", hidden: true, required: true },
+										{ title: "Prénom", propName: "firstName", required: true },
+										{ title: "Nom", propName: "lastName" },
+										{ title: "E-mail", propName: "email", type: "email", required: true },
+										{ title: "Rôle", propName: "role", required: true }
+									]}
+									data={members}
+									onAdd={addStaff}
+									onUpdate={updateStaff}
+									onDelete={deleteStaff}
+								/>
 							</React.Fragment>
 						)}
 					</React.Fragment>

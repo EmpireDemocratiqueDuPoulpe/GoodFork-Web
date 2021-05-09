@@ -1,6 +1,24 @@
 import config from "../config/config.js";
 
 const { api } = config;
+/* ---- CREATE ---------------------------------- */
+async function addStaff(member) {
+	const options = {
+		method: "post",
+		headers: {
+			"Content-Type": "application/json",
+			Accept: "application/json"
+		},
+		body: JSON.stringify(member)
+	};
+
+	return new Promise(((resolve, reject) => {
+		fetch(api.staff.add, options)
+			.then(response => resolve(response.json()))
+			.catch(err => reject(err));
+	}));
+}
+
 /* ---- READ ------------------------------------ */
 async function getStaff() {
 	const options = {
@@ -8,8 +26,34 @@ async function getStaff() {
 		headers: { Accept: "application/json" }
 	};
 
-	const response = await fetch(api.staff.getAll, options);
-	return await response.json();
+	return new Promise(((resolve, reject) => {
+		fetch(api.staff.getAll, options)
+			.then(response => resolve(response.json()))
+			.catch(err => reject(err));
+	}));
+}
+
+/* ---- UPDATE ---------------------------------- */
+async function update(user) {
+	const options = {
+		method: "put",
+		headers: {
+			"Content-Type": "application/json",
+			Accept: "application/json"
+		},
+		body: JSON.stringify({
+			userId: user.user_id,
+			firstName: user.firstName,
+			lastName: user.lastName,
+			email: user.email,
+		})
+	};
+
+	return new Promise(((resolve, reject) => {
+		fetch(api.users.update, options)
+			.then(response => resolve(response.json()))
+			.catch(err => reject(err));
+	}));
 }
 
 /* ---- DELETE ---------------------------------- */
@@ -23,11 +67,14 @@ async function deleteStaff(member) {
 		body: JSON.stringify({ userId: member.user_id })
 	};
 
-	const response = await fetch(api.staff.delete, options);
-	return await response.json();
+	return new Promise(((resolve, reject) => {
+		fetch(api.staff.delete, options)
+			.then(response => resolve(response.json()))
+			.catch(err => reject(err));
+	}));
 }
 
 /* ---- EXPORT ---------------------------------- */
 
-const Users = { getStaff, deleteStaff };
+const Users = { addStaff, getStaff, update, deleteStaff };
 export default Users;
