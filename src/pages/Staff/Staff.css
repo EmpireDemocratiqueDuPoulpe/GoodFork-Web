@@ -1,9 +1,1 @@
 /* ---- Staff ----------------------------------- */
-/* -- Actions */
-.stb-delete {
-  display: block;
-  width: 24px;
-  height: 24px;
-  background: firebrick;
-  cursor: pointer;
-}

@@ -1,0 +1,18 @@
+/* ---- Advanced Table -------------------------- */
+/* -- Rows */
+.at-hidden { display: none; }
+
+.at-update-row { background: darkorchid; }
+
+/* -- Actions */
+.at-action {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background: cornflowerblue;
+  cursor: pointer;
+}
+
+.at-action:not(:last-child) { margin-right: 5px; }
+
+.at-delete { background: firebrick; }
