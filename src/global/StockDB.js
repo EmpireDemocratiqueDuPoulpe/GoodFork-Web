@@ -71,5 +71,5 @@ async function del(item) {
 }
 
 /* ---- EXPORT ---------------------------------- */
-const Stock = { add, getAll, update, delete: del };
-export default Stock;
+const StockDB = { add, getAll, update, delete: del };
+export default StockDB;

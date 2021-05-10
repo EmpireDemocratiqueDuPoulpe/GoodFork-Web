@@ -76,5 +76,5 @@ async function deleteStaff(member) {
 }
 
 /* ---- EXPORT ---------------------------------- */
-const Users = { addStaff, getStaff, update, deleteStaff };
-export default Users;
+const UsersDB = { addStaff, getStaff, update, deleteStaff };
+export default UsersDB;
