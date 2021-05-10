@@ -14,6 +14,12 @@ const config = {
 			getAll: "http://localhost:8080/api/stock/all",
 			update: "http://localhost:8080/api/stock",
 			delete: "http://localhost:8080/api/stock"
+		},
+		tables: {
+			add: "http://localhost:8080/api/tables",
+			getAll: "http://localhost:8080/api/tables/all",
+			update: "http://localhost:8080/api/tables",
+			delete: "http://localhost:8080/api/tables"
 		}
 	}
 };
