@@ -3,7 +3,15 @@ import PropTypes from "prop-types";
 import InputField from "../InputField/InputField.js";
 import "./AdvancedTable.css";
 
-export const TYPES = { default: "text", text: "text", email: "email", number: "number", bool: "bool", date: "date" };
+export const TYPES = {
+	default: "text",
+	text: "text",
+	email: "email",
+	number: "number",
+	float: "float",
+	bool: "bool",
+	date: "date"
+};
 
 class AdvancedTable extends React.Component {
 	constructor(props) {
@@ -42,12 +50,13 @@ class AdvancedTable extends React.Component {
 
 	getDefaultValue(type) {
 		if (type === TYPES.bool) return false;
-		if (type === TYPES.number) return 0;
+		if (type === TYPES.number || type === TYPES.float) return 0;
 		else return "";
 	}
 
 	getInputType(type) {
 		if (type === TYPES.bool) return "checkbox";
+		if (type === TYPES.float) return "number";
 		return type;
 	}
 
@@ -133,9 +142,14 @@ class AdvancedTable extends React.Component {
 						<tr>
 							{headers.map((header, index) => {
 								const title = header.title ? header.title : header;
+								const required = header.required ?? false;
 								const hidden = header.hidden ?? false;
 
-								return <th key={index} className={hidden ? "at-hidden" : ""}>{title}</th>;
+								return (
+									<th key={index} className={hidden ? "at-hidden" : ""}>
+										{title}{required ? <span className="at-required-mark">*</span> : null }
+									</th>
+								);
 							})}
 							{showActions && <th>Actions</th>}
 						</tr>
@@ -151,17 +165,18 @@ class AdvancedTable extends React.Component {
 										const propName = associatedHeader.propName ? associatedHeader.propName : associatedHeader;
 										const type = associatedHeader.type ?? TYPES.default;
 										const inputType = this.getInputType(type);
+										const readonly = associatedHeader.readonly ?? false;
 										const hidden = associatedHeader.hidden ?? false;
 										const data = row[propName];
 										const convertedData = this.convertData(type, data);
 
 										return (
 											<td key={headIndex} className={hidden ? "at-hidden" : ""}>
-												{isUpdating ? (
+												{isUpdating && !readonly ? (
 													<InputField
 														type={inputType}
 														value={data}
-														step={0.1}
+														step={type === TYPES.float ? 0.1 : (type === TYPES.number ? 1 : null)}
 														onChange={value => this.handleUpdInputChange(propName, value)}
 														hidden={hidden}
 														required={associatedHeader.required}
@@ -192,16 +207,18 @@ class AdvancedTable extends React.Component {
 									const propName = associatedHeader.propName ? associatedHeader.propName : associatedHeader;
 									const type = associatedHeader.type ?? "text";
 									const inputType = this.getInputType(type);
+									const readonly = associatedHeader.readonly ?? false;
 									const hidden = associatedHeader.hidden ?? false;
 
 									if (hidden) return null;
+									if (readonly) return <td/>;
 
 									return (
 										<td key={index}>
 											<InputField
 												form={addFormId}
 												type={inputType}
-												step={0.1}
+												step={type === TYPES.float ? 0.1 : (type === TYPES.number ? 1 : null)}
 												onChange={value => this.handleAddInputChange(propName, value)}
 												required={associatedHeader.required}
 											/>
@@ -226,6 +243,7 @@ AdvancedTable.propTypes = {
 				propName: PropTypes.string,
 				type: PropTypes.oneOf([ "text", "number", "bool" ]),
 				required: PropTypes.bool,
+				readonly: PropTypes.bool,
 				hidden: PropTypes.bool
 			})
 		])

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay";
 import AdvancedTable, { TYPES } from "../../components/AdvancedTable/AdvancedTable";
-import StockDB from "../../global/Stock.js";
+import StockDB from "../../global/StockDB.js";
 
 export default function Stock() {
 	const [ stock, setStock ] = useState();
@@ -86,8 +86,8 @@ export default function Stock() {
 									headers={[
 										{ title: "ID", propName: "stock_id", hidden: true, required: true },
 										{ title: "Produit", propName: "name", required: true },
-										{ title: "Quantité", propName: "units", type: TYPES.number },
-										{ title: "Prix à l'unité", propName: "unit_price", type: TYPES.number },
+										{ title: "Quantité", propName: "units", type: TYPES.float },
+										{ title: "Prix à l'unité", propName: "unit_price", type: TYPES.float },
 										{ title: "Peut être commandé", propName: "is_orderable", type: TYPES.bool },
 										{ title: "Peut être cuisiné", propName: "is_cookable", type: TYPES.bool },
 										{ title: "Date de péremption min.", propName: "use_by_date_min", type: TYPES.date },

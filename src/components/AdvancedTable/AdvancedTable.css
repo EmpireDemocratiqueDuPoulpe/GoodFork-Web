@@ -1,4 +1,7 @@
 /* ---- Advanced Table -------------------------- */
+/* -- Table head */
+.at-required-mark { color: red; }
+
 /* -- Rows */
 .at-hidden { display: none; }
 

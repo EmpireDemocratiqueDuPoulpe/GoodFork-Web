@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
 import AdvancedTable, { TYPES } from "../../components/AdvancedTable/AdvancedTable.js";
-import Users from "../../global/Users.js";
+import UsersDB from "../../global/UsersDB.js";
 import "./Staff.css";
 
 export default function Staff() {
@@ -11,7 +11,7 @@ export default function Staff() {
 	const [ error, setError ] = useState();
 
 	const addStaff = async member => {
-		Users.addStaff(member)
+		UsersDB.addStaff(member)
 			.then(response => {
 				if (!response.error) {
 					getStaff();
@@ -26,7 +26,7 @@ export default function Staff() {
 	};
 
 	const getStaff = async () => {
-		Users.getStaff()
+		UsersDB.getStaff()
 			.then(response => {
 				setMembers(response.error ? null : response);
 				setLoaded(true);
@@ -41,7 +41,7 @@ export default function Staff() {
 	};
 
 	const updateStaff = async member => {
-		Users.update(member)
+		UsersDB.update(member)
 			.then(response => {
 				if (!response.error) {
 					getStaff();
@@ -56,7 +56,7 @@ export default function Staff() {
 	};
 
 	const deleteStaff = async member => {
-		Users.deleteStaff(member)
+		UsersDB.deleteStaff(member)
 			.then(response => {
 				if (!response.error) {
 					getStaff();
