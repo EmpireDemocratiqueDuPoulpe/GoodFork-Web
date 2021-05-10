@@ -1,11 +1,75 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay";
+import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay";
+import AdvancedTable, { TYPES } from "../../components/AdvancedTable/AdvancedTable";
+import StockDB from "../../global/Stock.js";
 
 export default function Stock() {
-	const stockItems = [
-		{ name: "Tomates", units: 201, unit_price: 5, isOrderable: true, isCookable: true, use_by_date_min: "01/01/1970", use_by_date_max: "04/06/2077" },
-		{ name: "Louan", units: 4137548, unit_price: .01, isOrderable: true, isCookable: true, use_by_date_min: "01/01/1970", use_by_date_max: "04/06/2077" },
-		{ name: "Riz", units: 1, unit_price: .00000001, isOrderable: true, isCookable: true, use_by_date_min: "01/01/1970", use_by_date_max: "04/06/2077" }
-	];
+	const [ stock, setStock ] = useState();
+	const [ loaded, setLoaded ] = useState(false);
+	const [ error, setError ] = useState();
+
+	const addStock = async item => {
+		StockDB.add(item)
+			.then(response => {
+				if (!response.error) {
+					getAll();
+				} else {
+					setError(response);
+				}
+			})
+			.catch(error => {
+				setError(error);
+				console.error(error);
+			});
+	};
+
+	const getAll = async () => {
+		StockDB.getAll()
+			.then(response => {
+				setStock(response.error ? null : response.stocks);
+				setLoaded(true);
+				setError(response.error ? response : null);
+			})
+			.catch(error => {
+				setStock([]);
+				setLoaded(true);
+				setError(error);
+				console.error(error);
+			});
+	};
+
+	const updateStock = async item => {
+		StockDB.update(item)
+			.then(response => {
+				if (!response.error) {
+					getAll();
+				} else {
+					setError(response);
+				}
+			})
+			.catch(error => {
+				setError(error);
+				console.error(error);
+			});
+	};
+
+	const deleteStock = async item => {
+		StockDB.delete(item)
+			.then(response => {
+				if (!response.error) {
+					getAll();
+				} else {
+					setError(response);
+				}
+			})
+			.catch(error => {
+				setError(error);
+				console.error(error);
+			});
+	};
+
+	useEffect(() => { getAll().catch(console.error); }, []);
 
 	return (
 		<React.Fragment>
@@ -14,34 +78,30 @@ export default function Stock() {
 			</div>
 
 			<div className="Page-body">
-				<table>
-					<thead>
-						<tr>
-							<th>Produit</th>
-							<th>Unit&eacute;</th>
-							<th>Prix unitaire</th>
-							<th>Peut être command&eacute; ?</th>
-							<th>Peut être cuit ?</th>
-							<th>Date de péremption min.</th>
-							<th>Date de péremption max.</th>
-						</tr>
-					</thead>
-					<tbody>
-						{stockItems.map((item, index) => {
-							return (
-								<tr key={index}>
-									<td>{item.name}</td>
-									<td>{item.units}</td>
-									<td>{item.unit_price}</td>
-									<td>{item.isOrderable ? "Oui" : "Non"}</td>
-									<td>{item.isCookable ? "Oui" : "Non"}</td>
-									<td>{item.use_by_date_min}</td>
-									<td>{item.use_by_date_max}</td>
-								</tr>
-							);
-						})}
-					</tbody>
-				</table>
+				{loaded ? (
+					<React.Fragment>
+						{error ? <ErrorDisplay error={error}/> : (
+							<React.Fragment>
+								<AdvancedTable
+									headers={[
+										{ title: "ID", propName: "stock_id", hidden: true, required: true },
+										{ title: "Produit", propName: "name", required: true },
+										{ title: "Quantité", propName: "units", type: TYPES.number },
+										{ title: "Prix à l'unité", propName: "unit_price", type: TYPES.number },
+										{ title: "Peut être commandé", propName: "is_orderable", type: TYPES.bool },
+										{ title: "Peut être cuisiné", propName: "is_cookable", type: TYPES.bool },
+										{ title: "Date de péremption min.", propName: "use_by_date_min", type: TYPES.date },
+										{ title: "Date de péremption max.", propName: "use_by_date_max", type: TYPES.date }
+									]}
+									data={stock}
+									onAdd={addStock}
+									onUpdate={updateStock}
+									onDelete={deleteStock}
+								/>
+							</React.Fragment>
+						)}
+					</React.Fragment>
+				) : <LoadingDisplay/>}
 			</div>
 		</React.Fragment>
 	);

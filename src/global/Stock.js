@@ -3,78 +3,73 @@ import config from "../config/config.js";
 const { api } = config;
 
 /* ---- CREATE ---------------------------------- */
-async function addStaff(member) {
+async function add(item) {
 	const options = {
 		method: "post",
 		headers: {
 			"Content-Type": "application/json",
 			Accept: "application/json"
 		},
-		body: JSON.stringify(member)
+		body: JSON.stringify(item)
 	};
 
 	return new Promise(((resolve, reject) => {
-		fetch(api.staff.add, options)
+		fetch(api.stock.add, options)
 			.then(response => resolve(response.json()))
 			.catch(err => reject(err));
 	}));
 }
 
 /* ---- READ ------------------------------------ */
-async function getStaff() {
+async function getAll() {
 	const options = {
 		method: "get",
 		headers: { Accept: "application/json" }
 	};
 
 	return new Promise(((resolve, reject) => {
-		fetch(api.staff.getAll, options)
+		fetch(api.stock.getAll, options)
 			.then(response => resolve(response.json()))
 			.catch(err => reject(err));
 	}));
 }
 
 /* ---- UPDATE ---------------------------------- */
-async function update(user) {
+async function update(item) {
 	const options = {
 		method: "put",
 		headers: {
 			"Content-Type": "application/json",
 			Accept: "application/json"
 		},
-		body: JSON.stringify({
-			userId: user.user_id,
-			firstName: user.firstName,
-			lastName: user.lastName,
-			email: user.email,
-		})
+		body: JSON.stringify(item)
 	};
 
 	return new Promise(((resolve, reject) => {
-		fetch(api.users.update, options)
+		fetch(api.stock.update, options)
 			.then(response => resolve(response.json()))
 			.catch(err => reject(err));
 	}));
 }
 
 /* ---- DELETE ---------------------------------- */
-async function deleteStaff(member) {
+async function del(item) {
 	const options = {
 		method: "delete",
 		headers: {
 			"Content-Type": "application/json",
 			Accept: "application/json"
 		},
-		body: JSON.stringify({ userId: member.user_id })
+		body: JSON.stringify({ stock_id: item.stock_id })
 	};
 
 	return new Promise(((resolve, reject) => {
-		fetch(api.staff.delete, options)
+		fetch(api.stock.delete, options)
 			.then(response => resolve(response.json()))
 			.catch(err => reject(err));
 	}));
 }
 
 /* ---- EXPORT ---------------------------------- */
-const Users = { addStaff, getStaff, update, deleteStaff };
-export default Users;
+const Stock = { add, getAll, update, delete: del };
+export default Stock;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
-import AdvancedTable from "../../components/AdvancedTable/AdvancedTable.js";
+import AdvancedTable, { TYPES } from "../../components/AdvancedTable/AdvancedTable.js";
 import Users from "../../global/Users.js";
 import "./Staff.css";
 
@@ -88,7 +88,7 @@ export default function Staff() {
 										{ title: "ID", propName: "user_id", hidden: true, required: true },
 										{ title: "Prénom", propName: "firstName", required: true },
 										{ title: "Nom", propName: "lastName" },
-										{ title: "E-mail", propName: "email", type: "email", required: true },
+										{ title: "E-mail", propName: "email", type: TYPES.email, required: true },
 										{ title: "Rôle", propName: "role", required: true }
 									]}
 									data={members}

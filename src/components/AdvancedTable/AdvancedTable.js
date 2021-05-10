@@ -1,6 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
+import InputField from "../InputField/InputField.js";
 import "./AdvancedTable.css";
+
+export const TYPES = { default: "text", text: "text", email: "email", number: "number", bool: "bool", date: "date" };
 
 class AdvancedTable extends React.Component {
 	constructor(props) {
@@ -17,6 +20,7 @@ class AdvancedTable extends React.Component {
 
 	componentDidMount() {
 		this.buildFormsIds();
+		this.startRowAddition();
 	}
 
 	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
@@ -28,14 +32,47 @@ class AdvancedTable extends React.Component {
 		this.setState({ addFormId: addFormId, updateFormId: updateFormId });
 	}
 
+	convertData(type, value) {
+		if (type === TYPES.bool) {
+			return value ? "Oui" : "Non";
+		}
+
+		return value;
+	}
+
+	getDefaultValue(type) {
+		if (type === TYPES.bool) return false;
+		if (type === TYPES.number) return 0;
+		else return "";
+	}
+
+	getInputType(type) {
+		if (type === TYPES.bool) return "checkbox";
+		return type;
+	}
+
 	/*****************************************************
 	 * Add row functions
 	 *****************************************************/
 
 	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
-	handleAddInputChange = (fieldName, event) => {
+	startRowAddition = () => {
+		const { headers } = this.props;
+		const addFields = {};
+
+		headers.forEach(header => {
+			const type = header.type ?? TYPES.default;
+
+			addFields[header.propName] = this.getDefaultValue(type);
+		});
+
+		this.setState({ addFields: addFields });
+	}
+
+	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
+	handleAddInputChange = (fieldName, value) => {
 		const { addFields } = this.state;
-		addFields[fieldName] = event.target.type === "checkbox" ? event.target.checked : event.target.value;
+		addFields[fieldName] = value;
 
 		this.setState({ addFields: addFields });
 	}
@@ -62,9 +99,9 @@ class AdvancedTable extends React.Component {
 	}
 
 	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
-	handleUpdInputChange = (fieldName, event) => {
+	handleUpdInputChange = (fieldName, value) => {
 		const { updateFields } = this.state;
-		updateFields[fieldName] = event.target.type === "checkbox" ? event.target.checked : event.target.value;
+		updateFields[fieldName] = value;
 
 		this.setState({ updateFields: updateFields });
 	}
@@ -112,20 +149,24 @@ class AdvancedTable extends React.Component {
 								<tr key={rowIndex} className={isUpdating ? "at-update-row" : ""}>
 									{headers.map((associatedHeader, headIndex) => {
 										const propName = associatedHeader.propName ? associatedHeader.propName : associatedHeader;
+										const type = associatedHeader.type ?? TYPES.default;
+										const inputType = this.getInputType(type);
 										const hidden = associatedHeader.hidden ?? false;
 										const data = row[propName];
+										const convertedData = this.convertData(type, data);
 
 										return (
 											<td key={headIndex} className={hidden ? "at-hidden" : ""}>
 												{isUpdating ? (
-													<input
-														type={associatedHeader.type ?? "text"}
-														defaultValue={data}
-														onChange={event => this.handleUpdInputChange(propName, event)}
+													<InputField
+														type={inputType}
+														value={data}
+														step={0.1}
+														onChange={value => this.handleUpdInputChange(propName, value)}
 														hidden={hidden}
 														required={associatedHeader.required}
 													/>
-												) : data}
+												) : convertedData}
 											</td>);
 									})}
 									{showActions && (
@@ -133,7 +174,7 @@ class AdvancedTable extends React.Component {
 											{onUpdate && (
 												<React.Fragment>
 													{isUpdating ? (
-														<input form={updateFormId} type="submit" value="Mettre à jour"/>
+														<InputField form={updateFormId} type="submit" value="Mettre à jour"/>
 													) : (
 														<div className="at-action at-update" onClick={ () => this.startRowUpdate(rowIndex) }/>
 													) }
@@ -149,21 +190,24 @@ class AdvancedTable extends React.Component {
 							<tr>
 								{headers.map((associatedHeader, index) => {
 									const propName = associatedHeader.propName ? associatedHeader.propName : associatedHeader;
+									const type = associatedHeader.type ?? "text";
+									const inputType = this.getInputType(type);
 									const hidden = associatedHeader.hidden ?? false;
 
 									if (hidden) return null;
 
 									return (
 										<td key={index}>
-											<input
+											<InputField
 												form={addFormId}
-												type={associatedHeader.type ?? "text"}
-												onChange={event => this.handleAddInputChange(propName, event)}
+												type={inputType}
+												step={0.1}
+												onChange={value => this.handleAddInputChange(propName, value)}
 												required={associatedHeader.required}
 											/>
 										</td>);
 								})}
-								<td><input form={addFormId} type="submit" value="Ajouter"/></td>
+								<td><InputField form={addFormId} type="submit" value="Ajouter"/></td>
 							</tr>
 						)}
 					</tbody>
@@ -180,7 +224,7 @@ AdvancedTable.propTypes = {
 			PropTypes.shape({
 				title: PropTypes.string.isRequired,
 				propName: PropTypes.string,
-				type: PropTypes.string,
+				type: PropTypes.oneOf([ "text", "number", "bool" ]),
 				required: PropTypes.bool,
 				hidden: PropTypes.bool
 			})
