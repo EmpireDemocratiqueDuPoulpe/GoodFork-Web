@@ -86,8 +86,8 @@ export default function Staff() {
 								<AdvancedTable
 									headers={[
 										{ title: "ID", propName: "user_id", hidden: true, required: true },
-										{ title: "Prénom", propName: "firstName", required: true },
-										{ title: "Nom", propName: "lastName" },
+										{ title: "Prénom", propName: "first_name", required: true },
+										{ title: "Nom", propName: "last_name" },
 										{ title: "E-mail", propName: "email", type: TYPES.email, required: true },
 										{ title: "Rôle", propName: "role", required: true }
 									]}

@@ -43,9 +43,9 @@ async function update(user) {
 			Accept: "application/json"
 		},
 		body: JSON.stringify({
-			userId: user.user_id,
-			firstName: user.firstName,
-			lastName: user.lastName,
+			user_id: user.user_id,
+			first_name: user.firstName,
+			last_name: user.lastName,
 			email: user.email,
 		})
 	};
@@ -65,7 +65,7 @@ async function deleteStaff(member) {
 			"Content-Type": "application/json",
 			Accept: "application/json"
 		},
-		body: JSON.stringify({ userId: member.user_id })
+		body: JSON.stringify({ user_id: member.user_id })
 	};
 
 	return new Promise(((resolve, reject) => {

@@ -1,3 +1,4 @@
+// TODO: Change API url to EC2 instance IP
 const config = {
 	api: {
 		users: {
