@@ -165,23 +165,24 @@ class AdvancedTable extends React.Component {
 										const propName = associatedHeader.propName ? associatedHeader.propName : associatedHeader;
 										const type = associatedHeader.type ?? TYPES.default;
 										const inputType = this.getInputType(type);
+										const hasUnit = associatedHeader.unit ?? false;
 										const readonly = associatedHeader.readonly ?? false;
 										const hidden = associatedHeader.hidden ?? false;
-										const data = row[propName];
-										const convertedData = this.convertData(type, data);
+										const rowData = row[propName];
+										const convertedData = this.convertData(type, rowData);
 
 										return (
 											<td key={headIndex} className={hidden ? "at-hidden" : ""}>
 												{isUpdating && !readonly ? (
 													<InputField
 														type={inputType}
-														value={data}
+														value={rowData}
 														step={type === TYPES.float ? 0.1 : (type === TYPES.number ? 1 : null)}
 														onChange={value => this.handleUpdInputChange(propName, value)}
 														hidden={hidden}
 														required={associatedHeader.required}
 													/>
-												) : convertedData}
+												) : `${convertedData} ${hasUnit ? data[rowIndex].unit : ""}`}
 											</td>);
 									})}
 									{showActions && (
@@ -242,6 +243,7 @@ AdvancedTable.propTypes = {
 				title: PropTypes.string.isRequired,
 				propName: PropTypes.string,
 				type: PropTypes.oneOf([ "text", "number", "bool" ]),
+				unit: PropTypes.bool,
 				required: PropTypes.bool,
 				readonly: PropTypes.bool,
 				hidden: PropTypes.bool

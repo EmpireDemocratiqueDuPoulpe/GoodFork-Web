@@ -86,7 +86,7 @@ export default function Stock() {
 									headers={[
 										{ title: "ID", propName: "stock_id", hidden: true, required: true },
 										{ title: "Produit", propName: "name", required: true },
-										{ title: "Quantité", propName: "units", type: TYPES.float },
+										{ title: "Quantité", propName: "units", type: TYPES.float, unit: true },
 										{ title: "Prix à l'unité", propName: "unit_price", type: TYPES.float },
 										{ title: "Peut être commandé", propName: "is_orderable", type: TYPES.bool },
 										{ title: "Peut être cuisiné", propName: "is_cookable", type: TYPES.bool },
