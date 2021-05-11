@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
-import AdvancedTable, { TYPES } from "../../components/AdvancedTable/AdvancedTable.js";
+import AdvancedTable, { Header } from "../../components/AdvancedTable/AdvancedTable.js";
 import UsersDB from "../../global/UsersDB.js";
 import "./Staff.css";
 
@@ -85,11 +85,11 @@ export default function Staff() {
 							<React.Fragment>
 								<AdvancedTable
 									headers={[
-										{ title: "ID", propName: "user_id", hidden: true, required: true },
-										{ title: "Prénom", propName: "first_name", required: true },
-										{ title: "Nom", propName: "last_name" },
-										{ title: "E-mail", propName: "email", type: TYPES.email, required: true },
-										{ title: "Rôle", propName: "role", required: true }
+										new Header("ID", { propName: "user_id", hidden: true, required: true }),
+										new Header("Prénom", { propName: "first_name", required: true }),
+										new Header("Nom", { propName: "last_name" }),
+										new Header("E-mail", { propName: "email", type: "email", required: true }),
+										new Header("Rôle", { propName: "role", required: true })
 									]}
 									data={members}
 									onAdd={addStaff}

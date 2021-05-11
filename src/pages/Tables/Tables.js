@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import TablesDB from "../../global/TablesDB.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay";
-import AdvancedTable, {TYPES} from "../../components/AdvancedTable/AdvancedTable";
+import AdvancedTable, { Header } from "../../components/AdvancedTable/AdvancedTable";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay";
 
 export default function Tables() {
@@ -84,10 +84,10 @@ export default function Tables() {
 							<React.Fragment>
 								<AdvancedTable
 									headers={[
-										{ title: "ID", propName: "table_id", hidden: false, readonly: true, required: true },
-										{ title: "Nom", propName: "name" },
-										{ title: "Capacité", propName: "capacity", type: TYPES.number, required: true },
-										{ title: "Est disponible", propName: "is_blocked", type: TYPES.bool }
+										new Header("ID", { propName: "table_id", readonly: true, required: true }),
+										new Header("Nom", { propName: "name" }),
+										new Header("Capacité", { propName: "capacity", type: "number", required: true }),
+										new Header("Est disponible", { propName: "is_available", type: "bool" }),
 									]}
 									data={tables}
 									onAdd={addTable}

@@ -3,16 +3,71 @@ import PropTypes from "prop-types";
 import InputField from "../InputField/InputField.js";
 import "./AdvancedTable.css";
 
-export const TYPES = {
-	default: "text",
-	text: "text",
-	email: "email",
-	number: "number",
-	float: "float",
-	bool: "bool",
-	date: "date"
-};
+class ColumnType {
+	static types = {
+		default: "text",
+		text: "text",
+		email: "email",
+		number: "number",
+		float: "float",
+		bool: "bool",
+		date: "date"
+	}
 
+	constructor(type) {
+		this._type = type ? (ColumnType.types[type] ?? ColumnType.types.default) : ColumnType.types.default;
+	}
+
+	default() {
+		if (this._type === ColumnType.types.bool) return false;
+		if (this._type === ColumnType.types.number || this._type === ColumnType.types.float) return 0;
+		else return "";
+	}
+
+	inputType() {
+		if (this._type === ColumnType.types.bool) return "checkbox";
+		if (this._type === ColumnType.types.number || this._type === ColumnType.types.float) return "number";
+		else return this._type;
+	}
+
+	step() {
+		if (this._type === ColumnType.types.number) return 1;
+		if (this._type === ColumnType.types.float) return 0.1;
+		else return null;
+	}
+
+	toText(value) {
+		if (this._type === ColumnType.types.bool) return value ? "Oui" : "Non";
+		else return value ?? this.default();
+	}
+}
+
+export class Header {
+	constructor(title, options) {
+		this._title = title;
+		this._type = new ColumnType(options ? options.type : null);
+
+		if (options) {
+			this._propName = options.propName;
+			this._unit = options.unit;
+			this._required = options.required;
+			this._readonly = options.readonly;
+			this._hidden = options.hidden;
+		}
+
+	}
+
+	title = () => this._title;
+	propName = () => this._propName ?? this._title;
+	type = () => this._type;
+	inputType = () => this._type.inputType();
+	hasUnit = () => this._unit ?? false;
+	isRequired = () => this._required ?? false;
+	isReadonly = () => this._readonly ?? false;
+	isHidden = () => this._hidden ?? false;
+}
+
+// TODO: Paging system
 class AdvancedTable extends React.Component {
 	constructor(props) {
 		super(props);
@@ -40,65 +95,17 @@ class AdvancedTable extends React.Component {
 		this.setState({ addFormId: addFormId, updateFormId: updateFormId });
 	}
 
-	convertData(type, value) {
-		if (type === TYPES.bool) {
-			return value ? "Oui" : "Non";
-		}
-
-		return value;
-	}
-
-	getDefaultValue(type) {
-		if (type === TYPES.bool) return false;
-		if (type === TYPES.number || type === TYPES.float) return 0;
-		else return "";
-	}
-
-	getInputType(type) {
-		if (type === TYPES.bool) return "checkbox";
-		if (type === TYPES.float) return "number";
-		return type;
-	}
-
-	/*****************************************************
-	 * Add row functions
-	 *****************************************************/
-
 	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
 	startRowAddition = () => {
 		const { headers } = this.props;
 		const addFields = {};
 
 		headers.forEach(header => {
-			const type = header.type ?? TYPES.default;
-
-			addFields[header.propName] = this.getDefaultValue(type);
+			addFields[header.propName()] = header.type().default();
 		});
 
 		this.setState({ addFields: addFields });
 	}
-
-	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
-	handleAddInputChange = (fieldName, value) => {
-		const { addFields } = this.state;
-		addFields[fieldName] = value;
-
-		this.setState({ addFields: addFields });
-	}
-
-	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
-	handleAddSubmit = event => {
-		event.preventDefault();
-
-		const { addFields } = this.state;
-		const { onAdd } = this.props;
-
-		onAdd(addFields);
-	}
-
-	/*****************************************************
-	 * Update row functions
-	 *****************************************************/
 
 	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
 	startRowUpdate = index => {
@@ -108,22 +115,32 @@ class AdvancedTable extends React.Component {
 	}
 
 	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
-	handleUpdInputChange = (fieldName, value) => {
-		const { updateFields } = this.state;
-		updateFields[fieldName] = value;
+	handleInputChange = (action, fieldName, value) => {
+		const { addFields, updateFields } = this.state;
 
-		this.setState({ updateFields: updateFields });
+		if (action === "add") {
+			addFields[fieldName] = value;
+			this.setState({ addFields: addFields });
+		} else if (action === "update") {
+			updateFields[fieldName] = value;
+			this.setState({ updateFields: updateFields });
+		}
 	}
 
 	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
-	handleUpdSubmit = event => {
+	handleSubmit = (event, action) => {
 		event.preventDefault();
 
-		const { updateFields } = this.state;
-		const { onUpdate } = this.props;
+		const { addFields, updateFields } = this.state;
+		const { onAdd, onUpdate } = this.props;
 
-		onUpdate(updateFields);
-		this.setState({ updateRow: -1, updateFields: {} });
+		if (action === "add") {
+			onAdd(addFields);
+			this.setState({ addFields: {} });
+		} else if (action === "update") {
+			onUpdate(updateFields);
+			this.setState({ updateRow: -1, updateFields: {} });
+		}
 	}
 	
 	render() {
@@ -134,20 +151,16 @@ class AdvancedTable extends React.Component {
 
 		return (
 			<React.Fragment>
-				{showAdd && <form id={addFormId} onSubmit={event => this.handleAddSubmit(event)}/>}
-				{!!onUpdate && <form id={updateFormId} onSubmit={event => this.handleUpdSubmit(event)}/>}
+				{showAdd && <form id={addFormId} onSubmit={event => this.handleSubmit(event, "add")}/>}
+				{!!onUpdate && <form id={updateFormId} onSubmit={event => this.handleSubmit(event, "update")}/>}
 
 				<table className="advanced-table">
 					<thead>
 						<tr>
 							{headers.map((header, index) => {
-								const title = header.title ? header.title : header;
-								const required = header.required ?? false;
-								const hidden = header.hidden ?? false;
-
 								return (
-									<th key={index} className={hidden ? "at-hidden" : ""}>
-										{title}{required ? <span className="at-required-mark">*</span> : null }
+									<th key={index} className={header.isHidden() ? "at-hidden" : ""}>
+										{header.title()}{header.isRequired() ? <span className="at-required-mark">*</span> : null }
 									</th>
 								);
 							})}
@@ -161,28 +174,22 @@ class AdvancedTable extends React.Component {
 
 							return (
 								<tr key={rowIndex} className={isUpdating ? "at-update-row" : ""}>
-									{headers.map((associatedHeader, headIndex) => {
-										const propName = associatedHeader.propName ? associatedHeader.propName : associatedHeader;
-										const type = associatedHeader.type ?? TYPES.default;
-										const inputType = this.getInputType(type);
-										const hasUnit = associatedHeader.unit ?? false;
-										const readonly = associatedHeader.readonly ?? false;
-										const hidden = associatedHeader.hidden ?? false;
-										const rowData = row[propName];
-										const convertedData = this.convertData(type, rowData);
+									{headers.map((columnHeader, headerIndex) => {
+										const cellData = row[columnHeader.propName()];
+										const cellType = columnHeader.type();
 
 										return (
-											<td key={headIndex} className={hidden ? "at-hidden" : ""}>
-												{isUpdating && !readonly ? (
+											<td key={headerIndex} className={columnHeader.isHidden() ? "at-hidden" : ""}>
+												{isUpdating && !columnHeader.isReadonly() ? (
 													<InputField
-														type={inputType}
-														value={rowData}
-														step={type === TYPES.float ? 0.1 : (type === TYPES.number ? 1 : null)}
-														onChange={value => this.handleUpdInputChange(propName, value)}
-														hidden={hidden}
-														required={associatedHeader.required}
+														type={cellType.inputType()}
+														value={cellData}
+														step={cellType.step()}
+														onChange={value => this.handleInputChange("input", columnHeader.propName(), value)}
+														hidden={columnHeader.isHidden()}
+														required={columnHeader.isRequired()}
 													/>
-												) : `${convertedData} ${hasUnit ? data[rowIndex].unit : ""}`}
+												) : `${cellType.toText(cellData)} ${columnHeader.hasUnit() ? data[rowIndex].unit : ""}`}
 											</td>);
 									})}
 									{showActions && (
@@ -204,24 +211,20 @@ class AdvancedTable extends React.Component {
 						})}
 						{showAdd && (
 							<tr>
-								{headers.map((associatedHeader, index) => {
-									const propName = associatedHeader.propName ? associatedHeader.propName : associatedHeader;
-									const type = associatedHeader.type ?? "text";
-									const inputType = this.getInputType(type);
-									const readonly = associatedHeader.readonly ?? false;
-									const hidden = associatedHeader.hidden ?? false;
+								{headers.map((columnHeader, headerIndex) => {
+									const cellType = columnHeader.type();
 
-									if (hidden) return null;
-									if (readonly) return <td/>;
+									if (columnHeader.isHidden()) return null;
+									if (columnHeader.isReadonly()) return <td/>;
 
 									return (
-										<td key={index}>
+										<td key={headerIndex}>
 											<InputField
 												form={addFormId}
-												type={inputType}
-												step={type === TYPES.float ? 0.1 : (type === TYPES.number ? 1 : null)}
-												onChange={value => this.handleAddInputChange(propName, value)}
-												required={associatedHeader.required}
+												type={cellType.inputType()}
+												step={cellType.step()}
+												onChange={value => this.handleInputChange("add", columnHeader.propName(), value)}
+												required={columnHeader.isRequired()}
 											/>
 										</td>);
 								})}
@@ -236,20 +239,7 @@ class AdvancedTable extends React.Component {
 }
 
 AdvancedTable.propTypes = {
-	headers: PropTypes.arrayOf(
-		PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.shape({
-				title: PropTypes.string.isRequired,
-				propName: PropTypes.string,
-				type: PropTypes.oneOf([ "text", "number", "bool" ]),
-				unit: PropTypes.bool,
-				required: PropTypes.bool,
-				readonly: PropTypes.bool,
-				hidden: PropTypes.bool
-			})
-		])
-	).isRequired,
+	headers: PropTypes.arrayOf(PropTypes.instanceOf(Header)).isRequired,
 	data: PropTypes.arrayOf(PropTypes.object),
 	onAdd: PropTypes.func,
 	onUpdate: PropTypes.func,

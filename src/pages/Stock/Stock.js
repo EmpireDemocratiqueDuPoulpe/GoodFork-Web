@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay";
-import AdvancedTable, { TYPES } from "../../components/AdvancedTable/AdvancedTable";
+import AdvancedTable, { Header } from "../../components/AdvancedTable/AdvancedTable";
 import StockDB from "../../global/StockDB.js";
 
 export default function Stock() {
@@ -84,14 +84,14 @@ export default function Stock() {
 							<React.Fragment>
 								<AdvancedTable
 									headers={[
-										{ title: "ID", propName: "stock_id", hidden: true, required: true },
-										{ title: "Produit", propName: "name", required: true },
-										{ title: "Quantité", propName: "units", type: TYPES.float, unit: true },
-										{ title: "Prix à l'unité", propName: "unit_price", type: TYPES.float },
-										{ title: "Peut être commandé", propName: "is_orderable", type: TYPES.bool },
-										{ title: "Peut être cuisiné", propName: "is_cookable", type: TYPES.bool },
-										{ title: "Date de péremption min.", propName: "use_by_date_min", type: TYPES.date },
-										{ title: "Date de péremption max.", propName: "use_by_date_max", type: TYPES.date }
+										new Header("ID", { propName: "stock_id", type: "number", required: true, readonly: true, hidden: true }),
+										new Header("Produit", { propName: "name", required: true }),
+										new Header("Quantité", { propName: "units", type: "float", unit: true }),
+										new Header("Prix à l'unité", { propName: "unit_price", type: "float" }),
+										new Header("Peut être commandé", { propName: "is_orderable", type: "bool" }),
+										new Header("Peut être cuisiné", { propName: "is_cookable", type: "bool" }),
+										new Header("Date de péremption min.", { propName: "use_by_date_min", type: "date" }),
+										new Header("Date de péremption max.", { propName: "use_by_date_max", type: "date" })
 									]}
 									data={stock}
 									onAdd={addStock}
