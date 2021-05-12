@@ -1,25 +1,31 @@
 // TODO: Change API url to EC2 instance IP
+const API_URI = "http://localhost:8080/api";
+
 const config = {
 	api: {
+		headers: { Accept: "application/json" },
 		users: {
-			update: "http://localhost:8080/api/users"
+			update: { method: "put", uri: `${API_URI}/users` }
 		},
 		staff: {
-			add: "http://localhost:8080/api/users/staff",
-			getAll: "http://localhost:8080/api/users/staff",
-			delete: "http://localhost:8080/api/users/staff"
+			add: { method: "post", uri: `${API_URI}/users/staff` },
+			getAll: { method: "get", uri: `${API_URI}/users/staff/all` },
+			delete: { method: "delete", uri: `${API_URI}/users/staff` }
+		},
+		roles: {
+			getAll: { method: "get", uri: `${API_URI}/roles/all` }
 		},
 		stock: {
-			add: "http://localhost:8080/api/stock",
-			getAll: "http://localhost:8080/api/stock/all",
-			update: "http://localhost:8080/api/stock",
-			delete: "http://localhost:8080/api/stock"
+			add: { method: "post", uri: `${API_URI}/stock` },
+			getAll: { method: "get", uri: `${API_URI}/stock/all` },
+			update: { method: "put", uri: `${API_URI}/stock` },
+			delete: { method: "delete", uri: `${API_URI}/stock` }
 		},
 		tables: {
-			add: "http://localhost:8080/api/tables",
-			getAll: "http://localhost:8080/api/tables/all",
-			update: "http://localhost:8080/api/tables",
-			delete: "http://localhost:8080/api/tables"
+			add: { method: "post", uri: `${API_URI}/tables` },
+			getAll: { method: "get", uri: `${API_URI}/tables/all` },
+			update: { method: "put", uri: `${API_URI}/tables` },
+			delete: { method: "delete", uri: `${API_URI}/tables` }
 		}
 	}
 };

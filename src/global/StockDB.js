@@ -1,73 +1,45 @@
+import { sendQuery } from "./AllDB.js";
 import config from "../config/config.js";
 
 const { api } = config;
 
 /* ---- CREATE ---------------------------------- */
 async function add(item) {
-	const options = {
-		method: "post",
-		headers: {
-			"Content-Type": "application/json",
-			Accept: "application/json"
-		},
-		body: JSON.stringify(item)
-	};
-
-	return new Promise(((resolve, reject) => {
-		fetch(api.stock.add, options)
-			.then(response => resolve(response.json()))
-			.catch(err => reject(err));
-	}));
+	return sendQuery(api.stock.add, { "Content-Type": "application/json" }, {
+		name: item.name,
+		units: item.units,
+		unit_price: item.unit_price,
+		is_orderable: item.is_orderable,
+		is_cookable: item.is_cookable,
+		use_by_date_min: item.use_by_date_min,
+		use_by_date_max: item.use_by_date_max
+	});
 }
 
 /* ---- READ ------------------------------------ */
 async function getAll() {
-	const options = {
-		method: "get",
-		headers: { Accept: "application/json" }
-	};
-
-	return new Promise(((resolve, reject) => {
-		fetch(api.stock.getAll, options)
-			.then(response => resolve(response.json()))
-			.catch(err => reject(err));
-	}));
+	return sendQuery(api.stock.getAll);
 }
 
 /* ---- UPDATE ---------------------------------- */
 async function update(item) {
-	const options = {
-		method: "put",
-		headers: {
-			"Content-Type": "application/json",
-			Accept: "application/json"
-		},
-		body: JSON.stringify(item)
-	};
-
-	return new Promise(((resolve, reject) => {
-		fetch(api.stock.update, options)
-			.then(response => resolve(response.json()))
-			.catch(err => reject(err));
-	}));
+	return sendQuery(api.stock.update, { "Content-Type": "application/json" }, {
+		stock_id: item.stock_id,
+		name: item.name,
+		units: item.units,
+		unit_price: item.unit_price,
+		is_orderable: item.is_orderable,
+		is_cookable: item.is_cookable,
+		use_by_date_min: item.use_by_date_min,
+		use_by_date_max: item.use_by_date_max
+	});
 }
 
 /* ---- DELETE ---------------------------------- */
 async function del(item) {
-	const options = {
-		method: "delete",
-		headers: {
-			"Content-Type": "application/json",
-			Accept: "application/json"
-		},
-		body: JSON.stringify({ stock_id: item.stock_id })
-	};
-
-	return new Promise(((resolve, reject) => {
-		fetch(api.stock.delete, options)
-			.then(response => resolve(response.json()))
-			.catch(err => reject(err));
-	}));
+	return sendQuery(api.stock.delete, { "Content-Type": "application/json" }, {
+		stock_id: item.stock_id
+	});
 }
 
 /* ---- EXPORT ---------------------------------- */

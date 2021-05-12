@@ -1,78 +1,39 @@
+import { sendQuery } from "./AllDB.js";
 import config from "../config/config.js";
 
 const { api } = config;
 
 /* ---- CREATE ---------------------------------- */
 async function addStaff(member) {
-	const options = {
-		method: "post",
-		headers: {
-			"Content-Type": "application/json",
-			Accept: "application/json"
-		},
-		body: JSON.stringify(member)
-	};
-
-	return new Promise(((resolve, reject) => {
-		fetch(api.staff.add, options)
-			.then(response => resolve(response.json()))
-			.catch(err => reject(err));
-	}));
+	return sendQuery(api.staff.add, { "Content-Type": "application/json" }, {
+		role_id: member.role,
+		first_name: member.first_name,
+		last_name: member.last_name,
+		email: member.email
+	});
 }
 
 /* ---- READ ------------------------------------ */
 async function getStaff() {
-	const options = {
-		method: "get",
-		headers: { Accept: "application/json" }
-	};
-
-	return new Promise(((resolve, reject) => {
-		fetch(api.staff.getAll, options)
-			.then(response => resolve(response.json()))
-			.catch(err => reject(err));
-	}));
+	return sendQuery(api.staff.getAll);
 }
 
 /* ---- UPDATE ---------------------------------- */
 async function update(user) {
-	const options = {
-		method: "put",
-		headers: {
-			"Content-Type": "application/json",
-			Accept: "application/json"
-		},
-		body: JSON.stringify({
-			user_id: user.user_id,
-			first_name: user.firstName,
-			last_name: user.lastName,
-			email: user.email,
-		})
-	};
-
-	return new Promise(((resolve, reject) => {
-		fetch(api.users.update, options)
-			.then(response => resolve(response.json()))
-			.catch(err => reject(err));
-	}));
+	return sendQuery(api.users.update, { "Content-Type": "application/json" }, {
+		user_id: user.user_id,
+		role_id: user.role,
+		first_name: user.first_name,
+		last_name: user.last_name,
+		email: user.email
+	});
 }
 
 /* ---- DELETE ---------------------------------- */
 async function deleteStaff(member) {
-	const options = {
-		method: "delete",
-		headers: {
-			"Content-Type": "application/json",
-			Accept: "application/json"
-		},
-		body: JSON.stringify({ user_id: member.user_id })
-	};
-
-	return new Promise(((resolve, reject) => {
-		fetch(api.staff.delete, options)
-			.then(response => resolve(response.json()))
-			.catch(err => reject(err));
-	}));
+	return sendQuery(api.staff.delete, { "Content-Type": "application/json" }, {
+		user_id: member.user_id
+	});
 }
 
 /* ---- EXPORT ---------------------------------- */

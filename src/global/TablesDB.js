@@ -1,73 +1,37 @@
+import { sendQuery } from "./AllDB.js";
 import config from "../config/config.js";
 
 const { api } = config;
 
 /* ---- CREATE ---------------------------------- */
 async function add(table) {
-	const options = {
-		method: "post",
-		headers: {
-			"Content-Type": "application/json",
-			Accept: "application/json"
-		},
-		body: JSON.stringify(table)
-	};
-
-	return new Promise(((resolve, reject) => {
-		fetch(api.tables.add, options)
-			.then(response => resolve(response.json()))
-			.catch(err => reject(err));
-	}));
+	return sendQuery(api.tables.add, { "Content-Type": "application/json" }, {
+		name: table.name,
+		capacity: table.capacity,
+		is_available: table.is_available
+	});
 }
 
 /* ---- READ ------------------------------------ */
 async function getAll() {
-	const options = {
-		method: "get",
-		headers: { Accept: "application/json" }
-	};
-
-	return new Promise(((resolve, reject) => {
-		fetch(api.tables.getAll, options)
-			.then(response => resolve(response.json()))
-			.catch(err => reject(err));
-	}));
+	return sendQuery(api.tables.getAll);
 }
 
 /* ---- UPDATE ---------------------------------- */
 async function update(table) {
-	const options = {
-		method: "put",
-		headers: {
-			"Content-Type": "application/json",
-			Accept: "application/json"
-		},
-		body: JSON.stringify(table)
-	};
-
-	return new Promise(((resolve, reject) => {
-		fetch(api.tables.update, options)
-			.then(response => resolve(response.json()))
-			.catch(err => reject(err));
-	}));
+	return sendQuery(api.tables.update, {"Content-Type": "application/json"}, {
+		table_id: table.table_id,
+		name: table.name,
+		capacity: table.capacity,
+		is_available: table.is_available
+	});
 }
 
 /* ---- DELETE ---------------------------------- */
 async function del(table) {
-	const options = {
-		method: "delete",
-		headers: {
-			"Content-Type": "application/json",
-			Accept: "application/json"
-		},
-		body: JSON.stringify({ table_id: table.table_id })
-	};
-
-	return new Promise(((resolve, reject) => {
-		fetch(api.tables.delete, options)
-			.then(response => resolve(response.json()))
-			.catch(err => reject(err));
-	}));
+	return sendQuery(api.tables.delete, { "Content-Type": "application/json" }, {
+		table_id: table.table_id
+	});
 }
 
 /* ---- EXPORT ---------------------------------- */
