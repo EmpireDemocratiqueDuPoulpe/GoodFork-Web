@@ -11,12 +11,15 @@ class ColumnType {
 		number: "number",
 		float: "float",
 		bool: "bool",
-		date: "date"
+		date: "date",
+		select: "select"
 	}
 
 	constructor(type) {
 		this._type = type ? (ColumnType.types[type] ?? ColumnType.types.default) : ColumnType.types.default;
 	}
+
+	name = () => this._type;
 
 	default() {
 		if (this._type === ColumnType.types.bool) return false;
@@ -27,6 +30,7 @@ class ColumnType {
 	inputType() {
 		if (this._type === ColumnType.types.bool) return "checkbox";
 		if (this._type === ColumnType.types.number || this._type === ColumnType.types.float) return "number";
+		if (this._type === ColumnType.types.select) return "select";
 		else return this._type;
 	}
 
@@ -53,14 +57,18 @@ export class Header {
 			this._required = options.required;
 			this._readonly = options.readonly;
 			this._hidden = options.hidden;
-		}
 
+			if (this._type.name() === "select") {
+				this._selectOpts = options.selectOpts;
+			}
+		}
 	}
 
 	title = () => this._title;
 	propName = () => this._propName ?? this._title;
 	type = () => this._type;
 	inputType = () => this._type.inputType();
+	selectOptions = () => this._type.name() === "select" ? this._selectOpts : null;
 	hasUnit = () => this._unit ?? false;
 	isRequired = () => this._required ?? false;
 	isReadonly = () => this._readonly ?? false;
@@ -182,10 +190,13 @@ class AdvancedTable extends React.Component {
 											<td key={headerIndex} className={columnHeader.isHidden() ? "at-hidden" : ""}>
 												{isUpdating && !columnHeader.isReadonly() ? (
 													<InputField
+														form={updateFormId}
 														type={cellType.inputType()}
 														value={cellData}
+														selectValues={columnHeader.selectOptions()}
+														currentValue={cellType.name() === "select" ? cellData : null}
 														step={cellType.step()}
-														onChange={value => this.handleInputChange("input", columnHeader.propName(), value)}
+														onChange={value => this.handleInputChange("update", columnHeader.propName(), value)}
 														hidden={columnHeader.isHidden()}
 														required={columnHeader.isRequired()}
 													/>
@@ -222,8 +233,10 @@ class AdvancedTable extends React.Component {
 											<InputField
 												form={addFormId}
 												type={cellType.inputType()}
+												selectValues={columnHeader.selectOptions()}
 												step={cellType.step()}
 												onChange={value => this.handleInputChange("add", columnHeader.propName(), value)}
+												hidden={columnHeader.isHidden()}
 												required={columnHeader.isRequired()}
 											/>
 										</td>);
