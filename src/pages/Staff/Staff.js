@@ -3,11 +3,14 @@ import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
 import AdvancedTable, { Header } from "../../components/AdvancedTable/AdvancedTable.js";
 import UsersDB from "../../global/UsersDB.js";
+import RolesDB from "../../global/RolesDB.js";
 import "./Staff.css";
 
 export default function Staff() {
 	const [ members, setMembers ] = useState();
-	const [ loaded, setLoaded ] = useState(false);
+	const [ roles, setRoles ] = useState();
+	const [ membersLoaded, setMembersLoaded ] = useState(false);
+	const [ rolesLoaded, setRolesLoaded ] = useState(false);
 	const [ error, setError ] = useState();
 
 	const addStaff = async member => {
@@ -29,12 +32,14 @@ export default function Staff() {
 		UsersDB.getStaff()
 			.then(response => {
 				setMembers(response.error ? null : response);
-				setLoaded(true);
+				setMembersLoaded(true);
 				setError(response.error ? response : null);
+
+				if (!response.error) getRoles();
 			})
 			.catch(error => {
 				setMembers([]);
-				setLoaded(true);
+				setMembersLoaded(true);
 				setError(error);
 				console.error(error);
 			});
@@ -70,6 +75,21 @@ export default function Staff() {
 			});
 	};
 
+	const getRoles = async () => {
+		RolesDB.getAllAsSelect()
+			.then(response => {
+				setRoles(response.error ? null : response);
+				setRolesLoaded(true);
+				setError(response.error ? response : null);
+			})
+			.catch(error => {
+				setRoles([]);
+				setRolesLoaded(true);
+				setError(error);
+				console.error(error);
+			});
+	};
+
 	useEffect(() => { getStaff().catch(console.error); }, []);
 
 	return (
@@ -79,7 +99,7 @@ export default function Staff() {
 			</div>
 
 			<div className="Page-body">
-				{loaded ? (
+				{membersLoaded && rolesLoaded ? (
 					<React.Fragment>
 						{error ? <ErrorDisplay error={error}/> : (
 							<React.Fragment>
@@ -89,7 +109,7 @@ export default function Staff() {
 										new Header("Prénom", { propName: "first_name", required: true }),
 										new Header("Nom", { propName: "last_name" }),
 										new Header("E-mail", { propName: "email", type: "email", required: true }),
-										new Header("Rôle", { propName: "role", required: true })
+										new Header("Rôle", { propName: "role", type: "select", selectOpts: roles, required: true })
 									]}
 									data={members}
 									onAdd={addStaff}
