@@ -31,7 +31,7 @@ export default function Staff() {
 	const getStaff = async () => {
 		UsersDB.getStaff()
 			.then(response => {
-				setMembers(response.error ? null : response);
+				setMembers(response.error ? null : response.staff);
 				setMembersLoaded(true);
 				setError(response.error ? response : null);
 
