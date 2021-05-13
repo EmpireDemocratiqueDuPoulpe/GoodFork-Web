@@ -21,6 +21,9 @@ const config = {
 			update: { method: "put", uri: `${API_URI}/stock` },
 			delete: { method: "delete", uri: `${API_URI}/stock` }
 		},
+		units: {
+			getAll: { method: "get", uri: `${API_URI}/units/all` }
+		},
 		tables: {
 			add: { method: "post", uri: `${API_URI}/tables` },
 			getAll: { method: "get", uri: `${API_URI}/tables/all` },

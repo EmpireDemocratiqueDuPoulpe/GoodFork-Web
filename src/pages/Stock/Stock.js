@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay";
-import AdvancedTable, { Header } from "../../components/AdvancedTable/AdvancedTable";
+import AdvancedTable, { Header, MixedHeader } from "../../components/AdvancedTable/AdvancedTable";
 import StockDB from "../../global/StockDB.js";
+import UnitsDB from "../../global/UnitsDB.js";
 
 export default function Stock() {
 	const [ stock, setStock ] = useState();
-	const [ loaded, setLoaded ] = useState(false);
+	const [ units, setUnits ] = useState();
+	const [ stockLoaded, setStockLoaded ] = useState(false);
+	const [ unitsLoaded, setUnitsLoaded ] = useState(false);
 	const [ error, setError ] = useState();
 
 	const addStock = async item => {
@@ -28,12 +31,14 @@ export default function Stock() {
 		StockDB.getAll()
 			.then(response => {
 				setStock(response.error ? null : response.stocks);
-				setLoaded(true);
+				setStockLoaded(true);
 				setError(response.error ? response : null);
+
+				if (!response.error) getUnits();
 			})
 			.catch(error => {
 				setStock([]);
-				setLoaded(true);
+				setStockLoaded(true);
 				setError(error);
 				console.error(error);
 			});
@@ -69,6 +74,21 @@ export default function Stock() {
 			});
 	};
 
+	const getUnits = async () => {
+		UnitsDB.getAllAsSelect()
+			.then(response => {
+				setUnits(response.error ? null : response);
+				setUnitsLoaded(true);
+				setError(response.error ? response : null);
+			})
+			.catch(error => {
+				setUnits([]);
+				setUnitsLoaded(true);
+				setError(error);
+				console.error(error);
+			});
+	};
+
 	useEffect(() => { getAll().catch(console.error); }, []);
 
 	return (
@@ -78,7 +98,7 @@ export default function Stock() {
 			</div>
 
 			<div className="Page-body">
-				{loaded ? (
+				{stockLoaded && unitsLoaded ? (
 					<React.Fragment>
 						{error ? <ErrorDisplay error={error}/> : (
 							<React.Fragment>
@@ -86,7 +106,10 @@ export default function Stock() {
 									headers={[
 										new Header("ID", { propName: "stock_id", type: "number", required: true, readonly: true, hidden: true }),
 										new Header("Produit", { propName: "name", required: true }),
-										new Header("Quantité", { propName: "units", type: "float", unit: true }),
+										new MixedHeader(
+											new Header("Quantité", { propName: "units", type: "float" }),
+											new Header("Unité", { propName: "units_unit", type: "select", selectOpts: units, hideTitle: true })
+										),
 										new Header("Prix à l'unité", { propName: "unit_price", type: "float" }),
 										new Header("Peut être commandé", { propName: "is_orderable", type: "bool" }),
 										new Header("Peut être cuisiné", { propName: "is_cookable", type: "bool" }),
