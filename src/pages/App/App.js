@@ -12,7 +12,7 @@ export default function App() {
 		<Router>
 			<div className="App">
 				<header className="App-header">
-					<h1>The Good Fork - Gestion</h1>
+					<h1><Link to="/">The Good Fork - Gestion</Link></h1>
 
 					<h2>--&gt; Modifier</h2>
 					<ul>
