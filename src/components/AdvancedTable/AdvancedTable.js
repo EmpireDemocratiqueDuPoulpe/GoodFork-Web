@@ -4,6 +4,7 @@ import InputField from "../InputField/InputField.js";
 import "./AdvancedTable.css";
 
 class ColumnType {
+	_type = ColumnType.types.default;
 	static types = {
 		default: "text",
 		text: "text",
@@ -47,13 +48,22 @@ class ColumnType {
 }
 
 export class Header {
+	_title = "";
+	_hideTitle = null;
+	_propName = null;
+	_type = new ColumnType(null);
+	_required = null;
+	_readonly = null;
+	_hidden = null;
+	_selectOpts = null;
+
 	constructor(title, options) {
 		this._title = title;
-		this._type = new ColumnType(options ? options.type : null);
 
 		if (options) {
+			this._hideTitle = options.hideTitle;
 			this._propName = options.propName;
-			this._unit = options.unit;
+			this._type = new ColumnType(options.type);
 			this._required = options.required;
 			this._readonly = options.readonly;
 			this._hidden = options.hidden;
@@ -64,15 +74,42 @@ export class Header {
 		}
 	}
 
-	title = () => this._title;
+	title = () => this._hideTitle ? null : this._title;
 	propName = () => this._propName ?? this._title;
 	type = () => this._type;
 	inputType = () => this._type.inputType();
 	selectOptions = () => this._type.name() === "select" ? this._selectOpts : null;
-	hasUnit = () => this._unit ?? false;
 	isRequired = () => this._required ?? false;
 	isReadonly = () => this._readonly ?? false;
 	isHidden = () => this._hidden ?? false;
+}
+
+export class MixedHeader {
+	headers = [];
+
+	constructor(...headers) {
+		this.headers = headers;
+	}
+
+	titles() {
+		return this.headers.map(header => {
+			if (!header.isHidden()) {
+				header.title();
+			}
+		});
+	}
+
+	isReadonly() {
+		return this.headers.every(header => {
+			return header.isReadonly();
+		});
+	}
+
+	isHidden() {
+		return this.headers.every(header => {
+			return header.isHidden();
+		});
+	}
 }
 
 // TODO: Paging system
@@ -108,8 +145,14 @@ class AdvancedTable extends React.Component {
 		const { headers } = this.props;
 		const addFields = {};
 
+		const add = header => { addFields[header.propName()] = header.type().default(); };
+
 		headers.forEach(header => {
-			addFields[header.propName()] = header.type().default();
+			if (header instanceof MixedHeader) {
+				header.headers.forEach(subHeader => add(subHeader));
+			} else {
+				add(header);
+			}
 		});
 
 		this.setState({ addFields: addFields });
@@ -168,7 +211,7 @@ class AdvancedTable extends React.Component {
 							{headers.map((header, index) => {
 								return (
 									<th key={index} className={header.isHidden() ? "at-hidden" : ""}>
-										{header.title()}{header.isRequired() ? <span className="at-required-mark">*</span> : null }
+										{this.renderHeader(header)}
 									</th>
 								);
 							})}
@@ -183,25 +226,11 @@ class AdvancedTable extends React.Component {
 							return (
 								<tr key={rowIndex} className={isUpdating ? "at-update-row" : ""}>
 									{headers.map((columnHeader, headerIndex) => {
-										const cellData = row[columnHeader.propName()];
-										const cellType = columnHeader.type();
-
 										return (
 											<td key={headerIndex} className={columnHeader.isHidden() ? "at-hidden" : ""}>
-												{isUpdating && !columnHeader.isReadonly() ? (
-													<InputField
-														form={updateFormId}
-														type={cellType.inputType()}
-														value={cellData}
-														selectValues={columnHeader.selectOptions()}
-														currentValue={cellType.name() === "select" ? cellData : null}
-														step={cellType.step()}
-														onChange={value => this.handleInputChange("update", columnHeader.propName(), value)}
-														hidden={columnHeader.isHidden()}
-														required={columnHeader.isRequired()}
-													/>
-												) : `${cellType.toText(cellData)} ${columnHeader.hasUnit() ? data[rowIndex].unit : ""}`}
-											</td>);
+												{this.renderCell(row, columnHeader, isUpdating)}
+											</td>
+										);
 									})}
 									{showActions && (
 										<td>
@@ -223,22 +252,9 @@ class AdvancedTable extends React.Component {
 						{showAdd && (
 							<tr>
 								{headers.map((columnHeader, headerIndex) => {
-									const cellType = columnHeader.type();
-
-									if (columnHeader.isHidden()) return null;
-									if (columnHeader.isReadonly()) return <td/>;
-
 									return (
-										<td key={headerIndex}>
-											<InputField
-												form={addFormId}
-												type={cellType.inputType()}
-												selectValues={columnHeader.selectOptions()}
-												step={cellType.step()}
-												onChange={value => this.handleInputChange("add", columnHeader.propName(), value)}
-												hidden={columnHeader.isHidden()}
-												required={columnHeader.isRequired()}
-											/>
+										<td key={headerIndex} className={columnHeader.isHidden() ? "at-hidden" : ""}>
+											{this.renderAddCell(columnHeader)}
 										</td>);
 								})}
 								<td><InputField form={addFormId} type="submit" value="Ajouter"/></td>
@@ -249,10 +265,99 @@ class AdvancedTable extends React.Component {
 			</React.Fragment>
 		);
 	}
+
+	renderHeader(header) {
+		if (header instanceof MixedHeader) {
+			return header.headers.map((subHeader, subIndex) => {
+				return (
+					<React.Fragment key={subIndex}>
+						{this.renderHeader(subHeader)}
+					</React.Fragment>
+				);
+			});
+		} else {
+			return (
+				<React.Fragment>
+					{header.title()}{header.isRequired() ? <span className="at-required-mark">*</span> : null }
+				</React.Fragment>
+			);
+		}
+	}
+
+	renderCell(row, header, isUpdating) {
+		const { updateFormId } = this.state;
+
+		if (header instanceof MixedHeader) {
+			return header.headers.map((subHeader, subIndex) => {
+				return (
+					<React.Fragment key={subIndex}>
+						{this.renderCell(row, subHeader, isUpdating)}
+					</React.Fragment>
+				);
+			});
+		} else {
+			const cellData = row[header.propName()];
+			const cellType = header.type();
+
+			return (
+				<React.Fragment>
+					{isUpdating ? (
+						<InputField
+							form={updateFormId}
+							type={cellType.inputType()}
+							value={cellData}
+							selectValues={header.selectOptions()}
+							currentValue={cellType.name() === "select" ? cellData : null}
+							step={cellType.step()}
+							onChange={value => this.handleInputChange("update", header.propName(), value)}
+							readonly={header.isReadonly()}
+							hidden={header.isHidden()}
+							required={header.isRequired()}
+						/>
+					) : `${cellType.toText(cellData)} `}
+				</React.Fragment>
+			);
+		}
+	}
+
+	renderAddCell(header) {
+		if (header.isReadonly()) return null;
+
+		const { addFormId } = this.state;
+
+		if (header instanceof MixedHeader) {
+			return header.headers.map((subHeader, subIndex) => {
+				return (
+					<React.Fragment key={subIndex}>
+						{this.renderAddCell(subHeader)}
+					</React.Fragment>
+				);
+			});
+		} else {
+			const cellType = header.type();
+
+			return (
+				<InputField
+					form={addFormId}
+					type={cellType.inputType()}
+					selectValues={header.selectOptions()}
+					step={cellType.step()}
+					onChange={value => this.handleInputChange("add", header.propName(), value)}
+					hidden={header.isHidden()}
+					required={header.isRequired()}
+				/>
+			);
+		}
+	}
 }
 
 AdvancedTable.propTypes = {
-	headers: PropTypes.arrayOf(PropTypes.instanceOf(Header)).isRequired,
+	headers: PropTypes.arrayOf(
+		PropTypes.oneOfType([
+			PropTypes.instanceOf(Header),
+			PropTypes.instanceOf(MixedHeader),
+		])
+	).isRequired,
 	data: PropTypes.arrayOf(PropTypes.object),
 	onAdd: PropTypes.func,
 	onUpdate: PropTypes.func,
