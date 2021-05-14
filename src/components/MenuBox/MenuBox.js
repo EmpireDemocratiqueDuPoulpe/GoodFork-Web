@@ -6,7 +6,7 @@ function MenuBox(props) {
 
 	return (
 		<div className="menu-box" onClick={() => onClick(menu)}>
-			<h3>{menu.name}</h3>
+			<h4>{menu.name}</h4>
 			<p>{menu.description}</p>
 		</div>
 	);
