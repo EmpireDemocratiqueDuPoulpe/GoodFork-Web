@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import TablesDB from "../../global/TablesDB.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay";
-import AdvancedTable, { Header } from "../../components/AdvancedTable/AdvancedTable";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay";
+import AdvancedTable, { Header } from "../../components/AdvancedTable/AdvancedTable";
 
 export default function Tables() {
 	const [ tables, setTables ] = useState();
