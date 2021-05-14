@@ -1,0 +1,6 @@
+/* ---- Menu box -------------------------------- */
+/* -- Container */
+.menu-box {
+  background: salmon;
+  cursor: pointer;
+}

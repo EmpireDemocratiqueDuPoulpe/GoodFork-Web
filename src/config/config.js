@@ -24,6 +24,10 @@ const config = {
 		units: {
 			getAll: { method: "get", uri: `${API_URI}/units/all` }
 		},
+		menus: {
+			getAll: { method: "get", uri: `${API_URI}/menus/all` },
+			getById: { method: "get", uri: `${API_URI}/menus` }
+		},
 		tables: {
 			add: { method: "post", uri: `${API_URI}/tables` },
 			getAll: { method: "get", uri: `${API_URI}/tables/all` },
