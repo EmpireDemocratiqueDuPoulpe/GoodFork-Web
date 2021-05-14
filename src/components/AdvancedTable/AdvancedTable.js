@@ -196,7 +196,7 @@ class AdvancedTable extends React.Component {
 	
 	render() {
 		const { addFormId, updateFormId, updateRow } = this.state;
-		const { headers, data, onAdd, onUpdate, onDelete } = this.props;
+		const { headers, data, onAdd, onUpdate, onDelete, autoID } = this.props;
 		const showAdd = !!onAdd;
 		const showActions = showAdd || (!!onUpdate || !!onDelete);
 
@@ -208,6 +208,7 @@ class AdvancedTable extends React.Component {
 				<table className="advanced-table">
 					<thead>
 						<tr>
+							{autoID && <th>-</th>}
 							{headers.map((header, index) => {
 								return (
 									<th key={index} className={header.isHidden() ? "at-hidden" : ""}>
@@ -225,6 +226,7 @@ class AdvancedTable extends React.Component {
 
 							return (
 								<tr key={rowIndex} className={isUpdating ? "at-update-row" : ""}>
+									{autoID && <td>{rowIndex + 1}</td>}
 									{headers.map((columnHeader, headerIndex) => {
 										return (
 											<td key={headerIndex} className={columnHeader.isHidden() ? "at-hidden" : ""}>
@@ -361,7 +363,8 @@ AdvancedTable.propTypes = {
 	data: PropTypes.arrayOf(PropTypes.object),
 	onAdd: PropTypes.func,
 	onUpdate: PropTypes.func,
-	onDelete: PropTypes.func
+	onDelete: PropTypes.func,
+	autoID: PropTypes.bool
 };
 
 export default AdvancedTable;
