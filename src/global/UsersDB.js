@@ -1,4 +1,4 @@
-import { sendQuery } from "./AllDB.js";
+import { sendQuery } from "./Functions.js";
 import config from "../config/config.js";
 
 const { api } = config;

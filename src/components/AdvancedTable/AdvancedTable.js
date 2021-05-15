@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { dateForDisplay } from "../../global/Functions.js";
 import InputField from "../InputField/InputField.js";
 import "./AdvancedTable.css";
 
@@ -43,6 +44,7 @@ class ColumnType {
 
 	toText(value) {
 		if (this._type === ColumnType.types.bool) return value ? "Oui" : "Non";
+		if (this._type === ColumnType.types.date) return dateForDisplay(value) ?? "";
 		else return value ?? this.default();
 	}
 }

@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { dateForField } from "../../global/Functions.js";
 
 function InputField(props) {
 	const {
@@ -13,18 +14,6 @@ function InputField(props) {
 		if(!onChange) return;
 		onChange(type === "checkbox" ? event.target.checked : event.target.value);
 	};
-
-	/*let defaultSelectVal = null;
-	if (type === "select") {
-		selectValues.every(opt => {
-			if (opt.text === currentValue) {
-				defaultSelectVal = opt.value;
-				return false;
-			}
-
-			return true;
-		});
-	}*/
 
 	return (
 		<div className={`input-field ${error ? "field-error" : ""}`}>
@@ -59,7 +48,7 @@ function InputField(props) {
 					autoFocus={autoFocus}
 					type={type}
 					placeholder={placeholder}
-					defaultValue={value}
+					defaultValue={type === "date" ? dateForField(value) : value}
 					checked={type === "checkbox" ? value : null}
 					step={step}
 					minLength={minLength}
