@@ -31,6 +31,51 @@ function MenuDetails(props) {
 			});
 	};
 
+	const addIngredient = async ingredient => {
+		MenusDB.addIngredient(menu, ingredient)
+			.then(response => {
+				if (!response.error) {
+					getMenu();
+				} else {
+					setError(response);
+				}
+			})
+			.catch(error => {
+				setError(error);
+				console.error(error);
+			});
+	};
+
+	const updateIngredient = async ingredient => {
+		MenusDB.updateIngredient(ingredient)
+			.then(response => {
+				if (!response.error) {
+					getMenu();
+				} else {
+					setError(response);
+				}
+			})
+			.catch(error => {
+				setError(error);
+				console.error(error);
+			});
+	};
+
+	const deleteIngredient = async ingredient => {
+		MenusDB.deleteIngredient(ingredient)
+			.then(response => {
+				if (!response.error) {
+					getMenu();
+				} else {
+					setError(response);
+				}
+			})
+			.catch(error => {
+				setError(error);
+				console.error(error);
+			});
+	};
+
 	const getUnits = async () => {
 		UnitsDB.getAllAsSelect()
 			.then(response => {
@@ -63,14 +108,24 @@ function MenuDetails(props) {
 								<h4>Ingrédients: </h4>
 								<AdvancedTable
 									headers={[
-										new Header("ID", { propName: "stock_id", type: "number", required: true, readonly: true, hidden: true }),
+										new Header("ID", { propName: "ingredient_id", type: "number", required: true, readonly: true, hidden: true }),
+										new Header("ID Stock", { propName: "stock_id", type: "number", required: true, readonly: true, hidden: true }),
 										new Header("Nom", { propName: "name", required: true }),
 										new MixedHeader(
 											new Header("Quantité", { propName: "units", type: "float" }),
-											new Header("Unité", { propName: "units_unit", type: "select", selectOpts: units, hideTitle: true })
-										),
+											new Header("Unité", {
+												propName: "units_unit_id",
+												displayPropName: "units_unit",
+												type: "select",
+												selectOpts: units,
+												hideTitle: true
+											})
+										)
 									]}
 									data={menu.ingredients}
+									onAdd={addIngredient}
+									onUpdate={updateIngredient}
+									onDelete={deleteIngredient}
 									autoID={true}
 								/>
 							</React.Fragment>

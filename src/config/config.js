@@ -28,6 +28,11 @@ const config = {
 			getAll: { method: "get", uri: `${API_URI}/menus/all` },
 			getById: { method: "get", uri: `${API_URI}/menus` }
 		},
+		ingredients: {
+			add: { method: "post", uri: `${API_URI}/menus/ingredients` },
+			update: { method: "update", uri: `${API_URI}/menus/ingredients` },
+			delete: { method: "delete", uri: `${API_URI}/menus/ingredients` }
+		},
 		tables: {
 			add: { method: "post", uri: `${API_URI}/tables` },
 			getAll: { method: "get", uri: `${API_URI}/tables/all` },
