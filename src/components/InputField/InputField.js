@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 function InputField(props) {
 	const {
 		form, autoComplete, autoFocus, disabled, readonly, hidden, required, type, value, selectValues,
-		currentValue, multiple, label, step, minLength, maxLength, placeholder, onChange, error
+		multiple, label, step, minLength, maxLength, placeholder, onChange, error
 	} = props;
 	const id = label
 		? `${label.replace(/[`~!@#$%^&*()\s_|+\-=?;:'",.<>{}[\]\\/]/gi, "").toLowerCase()}-input`
@@ -14,7 +14,7 @@ function InputField(props) {
 		onChange(type === "checkbox" ? event.target.checked : event.target.value);
 	};
 
-	let defaultSelectVal = null;
+	/*let defaultSelectVal = null;
 	if (type === "select") {
 		selectValues.every(opt => {
 			if (opt.text === currentValue) {
@@ -24,7 +24,7 @@ function InputField(props) {
 
 			return true;
 		});
-	}
+	}*/
 
 	return (
 		<div className={`input-field ${error ? "field-error" : ""}`}>
@@ -34,7 +34,7 @@ function InputField(props) {
 					form={form}
 					id={id}
 					name={id}
-					defaultValue={defaultSelectVal}
+					defaultValue={value}
 					autoComplete={autoComplete}
 					autoFocus={autoFocus}
 					multiple={multiple}
@@ -44,10 +44,7 @@ function InputField(props) {
 				>
 					{selectValues.map((opt, optIndex) => {
 						return (
-							<option
-								key={optIndex}
-								value={opt.value.toString()}
-							>
+							<option key={optIndex} value={opt.value.toString()}>
 								{opt.text}
 							</option>
 						);

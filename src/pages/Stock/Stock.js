@@ -108,7 +108,13 @@ export default function Stock() {
 										new Header("Produit", { propName: "name", required: true }),
 										new MixedHeader(
 											new Header("Quantité", { propName: "units", type: "float" }),
-											new Header("Unité", { propName: "units_unit", type: "select", selectOpts: units, hideTitle: true })
+											new Header("Unité", {
+												propName: "units_unit",
+												type: "select",
+												selectOpts: units,
+												defaultValueProp: "units_unit_id",
+												hideTitle: true
+											})
 										),
 										new Header("Prix à l'unité", { propName: "unit_price", type: "float" }),
 										new Header("Peut être commandé", { propName: "is_orderable", type: "bool" }),

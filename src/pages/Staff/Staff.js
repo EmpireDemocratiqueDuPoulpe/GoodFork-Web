@@ -109,7 +109,13 @@ export default function Staff() {
 										new Header("Prénom", { propName: "first_name", required: true }),
 										new Header("Nom", { propName: "last_name" }),
 										new Header("E-mail", { propName: "email", type: "email", required: true }),
-										new Header("Rôle", { propName: "role", type: "select", selectOpts: roles, required: true })
+										new Header("Rôle", {
+											propName: "role",
+											type: "select",
+											selectOpts: roles,
+											defaultValueProp: "role_id",
+											required: true
+										})
 									]}
 									data={members}
 									onAdd={addStaff}

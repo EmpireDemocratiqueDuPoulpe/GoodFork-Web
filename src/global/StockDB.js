@@ -8,7 +8,7 @@ async function add(item) {
 	return sendQuery(api.stock.add, { "Content-Type": "application/json" }, {
 		name: item.name,
 		units: item.units,
-		units_unit_id: item.units_unit,
+		units_unit_id: item.units_unit_id,
 		unit_price: item.unit_price,
 		is_orderable: item.is_orderable,
 		is_cookable: item.is_cookable,
@@ -28,7 +28,7 @@ async function update(item) {
 		stock_id: item.stock_id,
 		name: item.name,
 		units: item.units,
-		units_unit_id: item.units_unit,
+		units_unit_id: item.units_unit_id,
 		unit_price: item.unit_price,
 		is_orderable: item.is_orderable,
 		is_cookable: item.is_cookable,
