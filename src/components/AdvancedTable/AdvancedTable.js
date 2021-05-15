@@ -53,8 +53,8 @@ export class Header {
 	_title = "";
 	_hideTitle = null;
 	_propName = null;
+	_displayPropName = null;
 	_type = new ColumnType(null);
-	_defaultValueProp = null;
 	_required = null;
 	_readonly = null;
 	_hidden = null;
@@ -66,8 +66,8 @@ export class Header {
 		if (options) {
 			this._hideTitle = options.hideTitle;
 			this._propName = options.propName;
+			this._displayPropName = options.displayPropName;
 			this._type = new ColumnType(options.type);
-			this._defaultValueProp = options.defaultValueProp;
 			this._required = options.required;
 			this._readonly = options.readonly;
 			this._hidden = options.hidden;
@@ -80,8 +80,8 @@ export class Header {
 
 	title = () => this._hideTitle ? null : this._title;
 	propName = () => this._propName ?? this._title;
+	displayPropName = () => this._displayPropName;
 	type = () => this._type;
-	defaultValueProp = () => this._defaultValueProp;
 	inputType = () => this._type.inputType();
 	selectOptions = () => this._type.name() === "select" ? this._selectOpts : null;
 	isRequired = () => this._required ?? false;
@@ -173,7 +173,6 @@ class AdvancedTable extends React.Component {
 	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
 	handleInputChange = (action, fieldName, value) => {
 		const { addFields, updateFields } = this.state;
-		console.log(action, fieldName, value);
 
 		if (action === "add") {
 			addFields[fieldName] = value;
@@ -259,6 +258,7 @@ class AdvancedTable extends React.Component {
 						})}
 						{showAdd && (
 							<tr>
+								{autoID && <td/>}
 								{headers.map((columnHeader, headerIndex) => {
 									return (
 										<td key={headerIndex} className={columnHeader.isHidden() ? "at-hidden" : ""}>
@@ -305,8 +305,7 @@ class AdvancedTable extends React.Component {
 			});
 		} else {
 			const cellData = row[header.propName()];
-			const defaultValueProp = header.defaultValueProp();
-			const defaultValue = defaultValueProp ? row[defaultValueProp] : null;
+			const displayData = row[header.displayPropName()];
 			const cellType = header.type();
 
 			return (
@@ -315,7 +314,7 @@ class AdvancedTable extends React.Component {
 						<InputField
 							form={updateFormId}
 							type={cellType.inputType()}
-							value={defaultValue ?? cellData}
+							value={cellData}
 							selectValues={header.selectOptions()}
 							step={cellType.step()}
 							onChange={value => this.handleInputChange("update", header.propName(), value)}
@@ -323,7 +322,7 @@ class AdvancedTable extends React.Component {
 							hidden={header.isHidden()}
 							required={header.isRequired()}
 						/>
-					) : `${cellType.toText(cellData)} `}
+					) : `${cellType.toText(displayData ?? cellData)} `}
 				</React.Fragment>
 			);
 		}

@@ -109,10 +109,10 @@ export default function Stock() {
 										new MixedHeader(
 											new Header("Quantité", { propName: "units", type: "float" }),
 											new Header("Unité", {
-												propName: "units_unit",
+												propName: "units_unit_id",
+												displayPropName: "units_unit",
 												type: "select",
 												selectOpts: units,
-												defaultValueProp: "units_unit_id",
 												hideTitle: true
 											})
 										),
