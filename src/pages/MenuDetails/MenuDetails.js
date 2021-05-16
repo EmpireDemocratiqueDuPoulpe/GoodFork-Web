@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import MenusDB from "../../global/MenusDB.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay";
 import AdvancedTable, {Header, MixedHeader} from "../../components/AdvancedTable/AdvancedTable.js";
 import UnitsDB from "../../global/UnitsDB";
+import "./MenuDetails.css";
 
 function MenuDetails(props) {
 	const { match: { params: { menu_id } } } = props;
@@ -104,6 +106,9 @@ function MenuDetails(props) {
 					<React.Fragment>
 						{error ? <ErrorDisplay error={error}/> : (
 							<React.Fragment>
+								<Link to="/menus">&lt;-- Retour</Link>
+								<img src={menu.image_path} alt="Illustration du plat"/>
+								<p>Type: {menu.type}</p>
 								<p>Description: {menu.description}</p>
 								<h4>Ingrédients: </h4>
 								<AdvancedTable
