@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import MenusDB from "../../global/MenusDB.js";
-import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay";
-import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay";
-import AdvancedTable, {Header, MixedHeader} from "../../components/AdvancedTable/AdvancedTable.js";
-import UnitsDB from "../../global/UnitsDB";
+import { ModalError } from "../../components/Modal/Modal.js";
+import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
+import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
+import AdvancedTable, { Header, MixedHeader } from "../../components/AdvancedTable/AdvancedTable.js";
+import UnitsDB from "../../global/UnitsDB.js";
 import "./MenuDetails.css";
 
 function MenuDetails(props) {
@@ -15,6 +16,7 @@ function MenuDetails(props) {
 	const [ menuLoaded, setMenuLoaded ] = useState(false);
 	const [ unitsLoaded, setUnitsLoaded ] = useState(false);
 	const [ error, setError ] = useState();
+	const [ modalError, setModalError ] = useState();
 
 	const getMenu = async () => {
 		MenusDB.getById(menu_id)
@@ -29,53 +31,34 @@ function MenuDetails(props) {
 				setMenu(null);
 				setMenuLoaded(true);
 				setError(error);
-				console.error(error);
 			});
 	};
 
 	const addIngredient = async ingredient => {
 		MenusDB.addIngredient(menu, ingredient)
 			.then(response => {
-				if (!response.error) {
-					getMenu();
-				} else {
-					setError(response);
-				}
+				if (!response.error) getMenu();
+				else setModalError(response);
 			})
-			.catch(error => {
-				setError(error);
-				console.error(error);
-			});
+			.catch(setModalError);
 	};
 
 	const updateIngredient = async ingredient => {
 		MenusDB.updateIngredient(ingredient)
 			.then(response => {
-				if (!response.error) {
-					getMenu();
-				} else {
-					setError(response);
-				}
+				if (!response.error) getMenu();
+				else setModalError(response);
 			})
-			.catch(error => {
-				setError(error);
-				console.error(error);
-			});
+			.catch(setModalError);
 	};
 
 	const deleteIngredient = async ingredient => {
 		MenusDB.deleteIngredient(ingredient)
 			.then(response => {
-				if (!response.error) {
-					getMenu();
-				} else {
-					setError(response);
-				}
+				if (!response.error) getMenu();
+				else setModalError(response);
 			})
-			.catch(error => {
-				setError(error);
-				console.error(error);
-			});
+			.catch(setModalError);
 	};
 
 	const getUnits = async () => {
@@ -88,8 +71,7 @@ function MenuDetails(props) {
 			.catch(error => {
 				setUnits([]);
 				setUnitsLoaded(true);
-				setError(error);
-				console.error(error);
+				setError(error.message);
 			});
 	};
 
@@ -102,9 +84,10 @@ function MenuDetails(props) {
 			</div>
 
 			<div className="Page-body">
+				<ModalError error={modalError}/>
 				{menuLoaded && unitsLoaded ? (
 					<React.Fragment>
-						{error ? <ErrorDisplay error={error}/> : (
+						{!error ? (
 							<React.Fragment>
 								<Link to="/menus">&lt;-- Retour</Link>
 								<img src={menu.image_path} alt="Illustration du plat"/>
@@ -134,7 +117,7 @@ function MenuDetails(props) {
 									autoID={true}
 								/>
 							</React.Fragment>
-						)}
+						) : <ErrorDisplay/>}
 					</React.Fragment>
 				) : <LoadingDisplay/>}
 			</div>

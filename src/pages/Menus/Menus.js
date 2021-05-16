@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import MenusDB from "../../global/MenusDB.js";
-import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay";
-import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay";
+import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
+import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
 import MenuBox from "../../components/MenuBox/MenuBox.js";
 
 export default function Menus() {
@@ -22,7 +22,6 @@ export default function Menus() {
 				setMenus([]);
 				setLoaded(true);
 				setError(error);
-				console.error(error);
 			});
 	};
 

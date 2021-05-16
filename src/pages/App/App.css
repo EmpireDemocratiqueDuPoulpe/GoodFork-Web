@@ -1,6 +1,7 @@
 /* ---- App ------------------------------------- */
 /* -- App */
 .App {
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-items: flex-start;

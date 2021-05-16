@@ -3,11 +3,15 @@ import PropTypes from "prop-types";
 function ErrorDisplay(props) {
 	const { error } = props;
 
-	return (
+	if (error) {
+		console.error(`Error${error.code ? ` (${error.code})`  : ""}: ${error.error ?? error.message}`);
+	}
+
+	return error ? (
 		<div className="page-error">
 			<p>Une erreur est survenue {error.code ? `(${error.code}) ` : ""}: {error.error ?? error.message}</p>
 		</div>
-	);
+	) : null;
 }
 
 ErrorDisplay.propTypes = {

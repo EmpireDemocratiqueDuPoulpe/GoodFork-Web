@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
+import { ModalError } from "../../components/Modal/Modal.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
+import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
 import AdvancedTable, { Header } from "../../components/AdvancedTable/AdvancedTable.js";
 import UsersDB from "../../global/UsersDB.js";
 import RolesDB from "../../global/RolesDB.js";
@@ -12,20 +13,15 @@ export default function Staff() {
 	const [ membersLoaded, setMembersLoaded ] = useState(false);
 	const [ rolesLoaded, setRolesLoaded ] = useState(false);
 	const [ error, setError ] = useState();
+	const [ modalError, setModalError ] = useState();
 
 	const addStaff = async member => {
 		UsersDB.addStaff(member)
 			.then(response => {
-				if (!response.error) {
-					getStaff();
-				} else {
-					setError(response);
-				}
+				if (!response.error) getStaff();
+				else setModalError(response);
 			})
-			.catch(error => {
-				setError(error);
-				console.error(error);
-			});
+			.catch(setModalError);
 	};
 
 	const getStaff = async () => {
@@ -41,38 +37,25 @@ export default function Staff() {
 				setMembers([]);
 				setMembersLoaded(true);
 				setError(error);
-				console.error(error);
 			});
 	};
 
 	const updateStaff = async member => {
 		UsersDB.update(member)
 			.then(response => {
-				if (!response.error) {
-					getStaff();
-				} else {
-					setError(response);
-				}
+				if (!response.error) getStaff();
+				else setModalError(response);
 			})
-			.catch(error => {
-				setError(error);
-				console.error(error);
-			});
+			.catch(setModalError);
 	};
 
 	const deleteStaff = async member => {
 		UsersDB.deleteStaff(member)
 			.then(response => {
-				if (!response.error) {
-					getStaff();
-				} else {
-					setError(response);
-				}
+				if (!response.error) getStaff();
+				else setModalError(response);
 			})
-			.catch(error => {
-				setError(error);
-				console.error(error);
-			});
+			.catch(setModalError);
 	};
 
 	const getRoles = async () => {
@@ -86,7 +69,6 @@ export default function Staff() {
 				setRoles([]);
 				setRolesLoaded(true);
 				setError(error);
-				console.error(error);
 			});
 	};
 
@@ -99,9 +81,10 @@ export default function Staff() {
 			</div>
 
 			<div className="Page-body">
+				<ModalError error={modalError}/>
 				{membersLoaded && rolesLoaded ? (
 					<React.Fragment>
-						{error ? <ErrorDisplay error={error}/> : (
+						{!error ? (
 							<React.Fragment>
 								<AdvancedTable
 									headers={[
@@ -123,7 +106,7 @@ export default function Staff() {
 									onDelete={deleteStaff}
 								/>
 							</React.Fragment>
-						)}
+						) : <ErrorDisplay error={error}/>}
 					</React.Fragment>
 				) : <LoadingDisplay/>}
 			</div>

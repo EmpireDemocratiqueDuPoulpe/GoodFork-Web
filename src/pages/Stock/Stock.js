@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay";
-import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay";
-import AdvancedTable, { Header, MixedHeader } from "../../components/AdvancedTable/AdvancedTable";
+import { ModalError } from "../../components/Modal/Modal.js";
+import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
+import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
+import AdvancedTable, { Header, MixedHeader } from "../../components/AdvancedTable/AdvancedTable.js";
 import StockDB from "../../global/StockDB.js";
 import UnitsDB from "../../global/UnitsDB.js";
 
@@ -11,20 +12,15 @@ export default function Stock() {
 	const [ stockLoaded, setStockLoaded ] = useState(false);
 	const [ unitsLoaded, setUnitsLoaded ] = useState(false);
 	const [ error, setError ] = useState();
+	const [ modalError, setModalError ] = useState();
 
 	const addStock = async item => {
 		StockDB.add(item)
 			.then(response => {
-				if (!response.error) {
-					getAll();
-				} else {
-					setError(response);
-				}
+				if (!response.error) getAll();
+				else setModalError(response);
 			})
-			.catch(error => {
-				setError(error);
-				console.error(error);
-			});
+			.catch(setModalError);
 	};
 
 	const getAll = async () => {
@@ -40,38 +36,25 @@ export default function Stock() {
 				setStock([]);
 				setStockLoaded(true);
 				setError(error);
-				console.error(error);
 			});
 	};
 
 	const updateStock = async item => {
 		StockDB.update(item)
 			.then(response => {
-				if (!response.error) {
-					getAll();
-				} else {
-					setError(response);
-				}
+				if (!response.error) getAll();
+				else setModalError(response);
 			})
-			.catch(error => {
-				setError(error);
-				console.error(error);
-			});
+			.catch(setModalError);
 	};
 
 	const deleteStock = async item => {
 		StockDB.delete(item)
 			.then(response => {
-				if (!response.error) {
-					getAll();
-				} else {
-					setError(response);
-				}
+				if (!response.error) getAll();
+				else setModalError(response);
 			})
-			.catch(error => {
-				setError(error);
-				console.error(error);
-			});
+			.catch(setModalError);
 	};
 
 	const getUnits = async () => {
@@ -85,7 +68,6 @@ export default function Stock() {
 				setUnits([]);
 				setUnitsLoaded(true);
 				setError(error);
-				console.error(error);
 			});
 	};
 
@@ -98,9 +80,10 @@ export default function Stock() {
 			</div>
 
 			<div className="Page-body">
+				<ModalError error={modalError}/>
 				{stockLoaded && unitsLoaded ? (
 					<React.Fragment>
-						{error ? <ErrorDisplay error={error}/> : (
+						{!error ? (
 							<React.Fragment>
 								<AdvancedTable
 									headers={[
@@ -128,7 +111,7 @@ export default function Stock() {
 									onDelete={deleteStock}
 								/>
 							</React.Fragment>
-						)}
+						) : <ErrorDisplay error={error}/>}
 					</React.Fragment>
 				) : <LoadingDisplay/>}
 			</div>

@@ -1,27 +1,23 @@
 import React, { useState, useEffect } from "react";
 import TablesDB from "../../global/TablesDB.js";
-import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay";
-import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay";
-import AdvancedTable, { Header } from "../../components/AdvancedTable/AdvancedTable";
+import { ModalError } from "../../components/Modal/Modal.js";
+import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
+import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
+import AdvancedTable, { Header } from "../../components/AdvancedTable/AdvancedTable.js";
 
 export default function Tables() {
 	const [ tables, setTables ] = useState();
 	const [ loaded, setLoaded ] = useState(false);
 	const [ error, setError ] = useState();
+	const [ modalError, setModalError ] = useState();
 
 	const addTable = async table => {
 		TablesDB.add(table)
 			.then(response => {
-				if (!response.error) {
-					getTables();
-				} else {
-					setError(response);
-				}
+				if (!response.error) getTables();
+				else setModalError(response);
 			})
-			.catch(error => {
-				setError(error);
-				console.error(error);
-			});
+			.catch(setModalError);
 	};
 
 	const getTables = async () => {
@@ -35,38 +31,25 @@ export default function Tables() {
 				setTables([]);
 				setLoaded(true);
 				setError(error);
-				console.error(error);
 			});
 	};
 
 	const updateTable = async table => {
 		TablesDB.update(table)
 			.then(response => {
-				if (!response.error) {
-					getTables();
-				} else {
-					setError(response);
-				}
+				if (!response.error) getTables();
+				else setModalError(response);
 			})
-			.catch(error => {
-				setError(error);
-				console.error(error);
-			});
+			.catch(setModalError);
 	};
 
 	const deleteTable = async table => {
 		TablesDB.delete(table)
 			.then(response => {
-				if (!response.error) {
-					getTables();
-				} else {
-					setError(response);
-				}
+				if (!response.error) getTables();
+				else setModalError(response);
 			})
-			.catch(error => {
-				setError(error);
-				console.error(error);
-			});
+			.catch(setModalError);
 	};
 
 	useEffect(() => { getTables().catch(console.error); }, []);
@@ -78,9 +61,10 @@ export default function Tables() {
 			</div>
 
 			<div className="Page-body">
+				<ModalError error={modalError}/>
 				{loaded ? (
 					<React.Fragment>
-						{error ? <ErrorDisplay error={error}/> : (
+						{!error ? (
 							<React.Fragment>
 								<AdvancedTable
 									headers={[
@@ -95,7 +79,7 @@ export default function Tables() {
 									onDelete={deleteTable}
 								/>
 							</React.Fragment>
-						)}
+						) : <ErrorDisplay error={error}/>}
 					</React.Fragment>
 				) : <LoadingDisplay/>}
 			</div>
