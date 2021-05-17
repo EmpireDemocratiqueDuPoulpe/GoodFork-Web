@@ -10,7 +10,7 @@ function Modal(props) {
 	const [ isShowedOverwrite, setIsShowedOverwrite ] = useState(null);
 	const [ lastTitle, setLastTitle ] = useState();
 	const [ lastMessage, setLastMessage ] = useState();
-	const { title, message, onOk, onCancel, isShowed } = props;
+	const { title, message, onOk, onYes, onCancel, onNo, isShowed } = props;
 
 	const showModal = () => isShowedOverwrite !== null ? isShowedOverwrite : isShowed;
 
@@ -43,10 +43,16 @@ function Modal(props) {
 					{onOk && (
 						<button className="modal-button modal-ok" onClick={onOk}>Valider</button>
 					)}
+					{onYes && (
+						<button className="modal-button modal-yes" onClick={onYes}>Oui</button>
+					)}
 					{onCancel && (
 						<button className="modal-button modal-cancel" onClick={onCancel}>Annuler</button>
 					)}
-					{(!onOk && !onCancel) && (
+					{onNo && (
+						<button className="modal-button modal-no" onClick={onNo}>Non</button>
+					)}
+					{(!onOk && !onYes && !onCancel && !onNo) && (
 						<button className="modal-button modal-close" onClick={handleClose}>Fermer</button>
 					)}
 				</div>
@@ -59,7 +65,9 @@ Modal.propTypes = {
 	title: PropTypes.string,
 	message: PropTypes.string,
 	onOk: PropTypes.func,
+	onYes: PropTypes.func,
 	onCancel: PropTypes.func,
+	onNo: PropTypes.func,
 	isShowed: PropTypes.bool.isRequired
 };
 
