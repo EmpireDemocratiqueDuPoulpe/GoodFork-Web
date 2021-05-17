@@ -26,11 +26,16 @@ const config = {
 		},
 		menus: {
 			getAll: { method: "get", uri: `${API_URI}/menus/all` },
-			getById: { method: "get", uri: `${API_URI}/menus` }
+			getById: { method: "get", uri: `${API_URI}/menus` },
+			update: { method: "put", uri: `${API_URI}/menus` },
+			delete: { method: "delete", uri: `${API_URI}/menus` }
+		},
+		menuTypes: {
+			getAll: { method: "get", uri: `${API_URI}/menus/types/all` },
 		},
 		ingredients: {
 			add: { method: "post", uri: `${API_URI}/menus/ingredients` },
-			update: { method: "update", uri: `${API_URI}/menus/ingredients` },
+			update: { method: "put", uri: `${API_URI}/menus/ingredients` },
 			delete: { method: "delete", uri: `${API_URI}/menus/ingredients` }
 		},
 		tables: {
