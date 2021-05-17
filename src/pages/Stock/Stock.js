@@ -12,15 +12,15 @@ export default function Stock() {
 	const [ stockLoaded, setStockLoaded ] = useState(false);
 	const [ unitsLoaded, setUnitsLoaded ] = useState(false);
 	const [ error, setError ] = useState();
-	const [ modalError, setModalError ] = useState();
+	const [ errorModal, setErrorModal ] = useState();
 
 	const addStock = async item => {
 		StockDB.add(item)
 			.then(response => {
 				if (!response.error) getAll();
-				else setModalError(response);
+				else setErrorModal(response);
 			})
-			.catch(setModalError);
+			.catch(setErrorModal);
 	};
 
 	const getAll = async () => {
@@ -43,18 +43,18 @@ export default function Stock() {
 		StockDB.update(item)
 			.then(response => {
 				if (!response.error) getAll();
-				else setModalError(response);
+				else setErrorModal(response);
 			})
-			.catch(setModalError);
+			.catch(setErrorModal);
 	};
 
 	const deleteStock = async item => {
 		StockDB.delete(item)
 			.then(response => {
 				if (!response.error) getAll();
-				else setModalError(response);
+				else setErrorModal(response);
 			})
-			.catch(setModalError);
+			.catch(setErrorModal);
 	};
 
 	const getUnits = async () => {
@@ -80,7 +80,7 @@ export default function Stock() {
 			</div>
 
 			<div className="Page-body">
-				<ModalError error={modalError}/>
+				<ModalError error={errorModal}/>
 				{stockLoaded && unitsLoaded ? (
 					<React.Fragment>
 						{!error ? (

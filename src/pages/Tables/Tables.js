@@ -9,15 +9,15 @@ export default function Tables() {
 	const [ tables, setTables ] = useState();
 	const [ loaded, setLoaded ] = useState(false);
 	const [ error, setError ] = useState();
-	const [ modalError, setModalError ] = useState();
+	const [ errorModal, setErrorModal ] = useState();
 
 	const addTable = async table => {
 		TablesDB.add(table)
 			.then(response => {
 				if (!response.error) getTables();
-				else setModalError(response);
+				else setErrorModal(response);
 			})
-			.catch(setModalError);
+			.catch(setErrorModal);
 	};
 
 	const getTables = async () => {
@@ -38,18 +38,18 @@ export default function Tables() {
 		TablesDB.update(table)
 			.then(response => {
 				if (!response.error) getTables();
-				else setModalError(response);
+				else setErrorModal(response);
 			})
-			.catch(setModalError);
+			.catch(setErrorModal);
 	};
 
 	const deleteTable = async table => {
 		TablesDB.delete(table)
 			.then(response => {
 				if (!response.error) getTables();
-				else setModalError(response);
+				else setErrorModal(response);
 			})
-			.catch(setModalError);
+			.catch(setErrorModal);
 	};
 
 	useEffect(() => { getTables().catch(console.error); }, []);
@@ -61,7 +61,7 @@ export default function Tables() {
 			</div>
 
 			<div className="Page-body">
-				<ModalError error={modalError}/>
+				<ModalError error={errorModal}/>
 				{loaded ? (
 					<React.Fragment>
 						{!error ? (

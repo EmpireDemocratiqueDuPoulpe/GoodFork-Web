@@ -38,13 +38,13 @@ export default function Menus() {
 			<div className="Page-body">
 				{loaded ? (
 					<React.Fragment>
-						{error ? <ErrorDisplay error={error}/> : (
+						{!error ? (
 							<React.Fragment>
 								{menus.map((menu, index) => {
 									return <MenuBox key={index} menu={menu} onClick={setClickedMenu}/>;
 								})}
 							</React.Fragment>
-						)}
+						) : <ErrorDisplay error={error}/>}
 					</React.Fragment>
 				) : <LoadingDisplay/>}
 			</div>
