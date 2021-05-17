@@ -1,0 +1,4 @@
+/* ---- Input field ----------------------------- */
+.field-inline { display: inline-block; }
+
+.field-not-resizable { resize: none; }
