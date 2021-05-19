@@ -5,7 +5,7 @@ import "./InputField.css";
 function InputField(props) {
 	const {
 		form, autoComplete, autoFocus, disabled, readonly, hidden, required, resize, type, value, selectValues, multiple,
-		label, step, minLength, maxLength, placeholder, onChange, error, inline
+		label, step, minLength, maxLength, accept, placeholder, onChange, error, inline
 	} = props;
 	const id = label
 		? `${label.replace(/[`~!@#$%^&*()\s_|+\-=?;:'",.<>{}[\]\\/]/gi, "").toLowerCase()}-input`
@@ -13,7 +13,11 @@ function InputField(props) {
 
 	const handleChange = event => {
 		if(!onChange) return;
-		onChange(type === "checkbox" ? event.target.checked : event.target.value);
+		onChange(
+			type === "checkbox" ? event.target.checked :
+				type === "file" ? event.target.files[0] :
+					event.target.value
+		);
 	};
 
 	const renderInput = () => {
@@ -76,6 +80,8 @@ function InputField(props) {
 					minLength={minLength}
 					maxLength={maxLength}
 					onChange={handleChange}
+					accept={type === "file" ? accept : null}
+					multiple={type === "file" ? multiple : null}
 					disabled={disabled}
 					readOnly={readonly}
 					hidden={hidden}
@@ -112,6 +118,7 @@ InputField.propTypes = {
 	step: PropTypes.number,
 	minLength: PropTypes.number,
 	maxLength: PropTypes.number,
+	accept: PropTypes.string,
 	label: PropTypes.string,
 	placeholder: PropTypes.string,
 	onChange: PropTypes.func,

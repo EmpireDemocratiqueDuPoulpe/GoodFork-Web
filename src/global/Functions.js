@@ -25,6 +25,26 @@ export function sendQuery(destination, headers = null, body = null, params = nul
 	}));
 }
 
+export function sendFiles(destination, files) {
+	const formData = new FormData();
+
+	Object.entries(files).forEach(([key, file]) => {
+		formData.append(key, file);
+	});
+
+	const options = {
+		method: destination.method,
+		headers: api.headers,
+		body: formData
+	};
+
+	return new Promise(((resolve, reject) => {
+		fetch(destination.uri, options)
+			.then(response => resolve(response.json()))
+			.catch(err => reject(err));
+	}));
+}
+
 /*****************************************************
  * Date
  *****************************************************/

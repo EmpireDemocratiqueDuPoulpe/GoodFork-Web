@@ -1,5 +1,6 @@
 // TODO: Change API url to EC2 instance IP
-const API_URI = "http://localhost:8080/api";
+export const API_URI = "http://localhost:8080/api";
+export const API_FILES_URI = "http://localhost:8080/images";
 
 const config = {
 	api: {
@@ -25,6 +26,7 @@ const config = {
 			getAll: { method: "get", uri: `${API_URI}/units/all` }
 		},
 		menus: {
+			uploadIllustration: { method: "post", uri: `${API_URI}/menus/upload/illustration` },
 			getAll: { method: "get", uri: `${API_URI}/menus/all` },
 			getById: { method: "get", uri: `${API_URI}/menus` },
 			update: { method: "put", uri: `${API_URI}/menus` },

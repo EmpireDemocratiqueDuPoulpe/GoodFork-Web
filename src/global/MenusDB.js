@@ -1,11 +1,17 @@
-import { sendQuery } from "./Functions.js";
+import { sendQuery, sendFiles } from "./Functions.js";
 import config from "../config/config.js";
 
 const { api } = config;
 
 /* ---- CREATE ---------------------------------- */
+async function uploadIllustration(menu, image) {
+	return sendFiles(api.menus.uploadIllustration, {
+		menu_id: menu.menu_id,
+		illustration: image
+	});
+}
+
 async function addIngredient(menu, ingredient) {
-	console.log(ingredient);
 	return sendQuery(api.ingredients.add, { "Content-Type": "application/json" }, {
 		menu_id: menu.menu_id,
 		name: ingredient.name,
@@ -45,12 +51,11 @@ async function getTypesAsSelect() {
 
 /* ---- UPDATE ---------------------------------- */
 async function update(menu) {
-	return sendQuery(api.menus.update, { "Content-Type": "application/json" }, {
+	return sendQuery(api.menus.update, {
 		menu_id: menu.menu_id,
 		type_id: menu.type_id,
 		name: menu.name,
-		description: menu.description,
-		image_path: menu.image_path
+		description: menu.description
 	});
 }
 
@@ -78,6 +83,7 @@ async function delIngredient(ingredient) {
 
 /* ---- EXPORT ---------------------------------- */
 const MenusDB = {
+	uploadIllustration,
 	addIngredient,
 	getAll,
 	getById,

@@ -2,12 +2,13 @@ import React from "react";
 import { Redirect, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import MenusDB from "../../global/MenusDB.js";
+import UnitsDB from "../../global/UnitsDB.js";
+import { API_FILES_URI } from "../../config/config.js";
 import Modal, { ModalError } from "../../components/Modal/Modal.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
 import AdvancedTable, { Header, MixedHeader } from "../../components/AdvancedTable/AdvancedTable.js";
 import InputField from "../../components/InputField/InputField.js";
-import UnitsDB from "../../global/UnitsDB.js";
 import "./MenuDetails.css";
 
 class MenuDetails extends React.Component{
@@ -56,6 +57,20 @@ class MenuDetails extends React.Component{
 			.catch(error => this.setState({ errorModal: error }));
 	};
 
+	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
+	handleUploadSubmit = file => {
+		const { menu } = this.state;
+
+		if (file) {
+			MenusDB.uploadIllustration(menu, file)
+				.then(response => {
+					if (!response.error) this.getMenu();
+					else this.setState({ errorModal: response });
+				})
+				.catch(error => this.setState({ errorModal: error }));
+		}
+	};
+
 	/*****************************************************
 	 * Menu
 	 *****************************************************/
@@ -64,7 +79,7 @@ class MenuDetails extends React.Component{
 		const { match: { params: { menu_id } } } = this.props;
 
 		MenusDB.getById(menu_id)
-			.then(response => this.setState({ menu: response.menu, updateFields: response.menu, menuLoaded: true, error: response.error }))
+			.then(response => this.setState({ menu: response.menu, updateFields: { menu_id: response.menu.menu_id }, menuLoaded: true, error: response.error }))
 			.catch(error => this.setState({ menu: null, updateFields: null, menuLoaded: true, error: error }));
 	};
 
@@ -133,11 +148,13 @@ class MenuDetails extends React.Component{
 			error, errorModal, deleteModal, redirectTo
 		} = this.state;
 		const updFormId = "update-menu-form";
+		const uploadFormId = "upload-menu-form";
 
 		if (redirectTo) return <Redirect to={redirectTo}/>;
 		return (
 			<React.Fragment>
 				<form id={updFormId} onSubmit={this.handleSubmit}/>
+				<form id={uploadFormId} onSubmit={this.handleUploadSubmit} encType="multipart/form-data"/>
 				<div className="Page-header">
 					<h3>Menu{menuLoaded ? (
 						<span> - <InputField
@@ -169,7 +186,13 @@ class MenuDetails extends React.Component{
 									<span onClick={() => this.setState({ deleteModal: true })}>Supprimer</span>
 
 									<div className="menu-infos">
-										<img src={menu.image_path} alt="Illustration du plat"/>
+										<img src={`${API_FILES_URI}/${menu.image_path}`} alt="Illustration du plat"/>
+										<span>Image: <InputField
+											form={uploadFormId}
+											type="file"
+											onChange={value => this.handleUploadSubmit(value)}
+											accept="image/jpeg,image/png,image/bmp"
+										/></span>
 										<span>Type: <InputField
 											form={updFormId}
 											type="select"
