@@ -1,11 +1,42 @@
 /* ---- Advanced Table -------------------------- */
+/* -- Table */
+.advanced-table {
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
 /* -- Table head */
+.advanced-table thead {
+  background-color: #e79087;
+  background-image: linear-gradient(315deg, #e79087 0%, #fcd181 74%);
+}
+
+.advanced-table th {
+  height: 30px;
+  padding: 0 10px;
+}
+
 .at-required-mark { color: red; }
 
 /* -- Rows */
-.at-hidden { display: none; }
+.advanced-table tbody tr:hover { background: #E6E6E6; }
+.at-update-row { background: #E6E6E6; }
 
-.at-update-row { background: darkorchid; }
+/* -- Cells */
+.at-hidden { display: none; }
+.at-centered { text-align: center; }
+
+.advanced-table td .input-field { height: 100%; }
+
+.at-multiple-fields div {
+  display: flex;
+  flex-direction: row;
+  justify-items: center;
+  align-items: center;
+}
+
+.at-multiple-fields .input-field { display: inline-block; }
+.at-multiple-fields .field-select { width: 40%; }
 
 /* -- Actions */
 .at-action {
@@ -18,4 +49,5 @@
 
 .at-action:not(:last-child) { margin-right: 5px; }
 
+.at-stop-update { background: fuchsia; }
 .at-delete { background: firebrick; }

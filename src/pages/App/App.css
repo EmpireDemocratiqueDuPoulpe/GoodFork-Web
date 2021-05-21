@@ -11,14 +11,19 @@
 }
 
 .App-header {
+  box-sizing: border-box;
   flex: 0 0 auto;
   width: 20vw;
-  background: hotpink;
+  padding: 0 15px;
+  background: #F0F0F0;
+  z-index: 50;
 }
+
+.App-header h1 { text-align: center; }
 
 .App-body {
   flex: 1;
-  background: khaki;
+  background: #FAFAFA;
 }
 
 /* -- Pages */
@@ -26,7 +31,13 @@
   height: 70px;
   line-height: 70px;
   padding-left: 10px;
-  background: darkcyan;
+  background-color: #e79087;
+  background-image: linear-gradient(315deg, #e79087 0%, #fcd181 74%);
+  -moz-box-shadow: 0 6px 25px -5px rgba(0,0,0,0.19);
+  -webkit-box-shadow: 0 6px 25px -5px rgba(0,0,0,0.19);
+  box-shadow: 0 6px 25px -5px rgba(0,0,0,0.19);
 }
 
 .Page-header h3 { margin: 0; }
+
+.Page-body { padding: 20px; }

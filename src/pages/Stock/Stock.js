@@ -100,8 +100,8 @@ export default function Stock() {
 											})
 										),
 										new Header("Prix à l'unité", { propName: "unit_price", type: "float" }),
-										new Header("Peut être commandé", { propName: "is_orderable", type: "bool" }),
-										new Header("Peut être cuisiné", { propName: "is_cookable", type: "bool" }),
+										new Header("Peut être commandé", { propName: "is_orderable", type: "bool", centered: true }),
+										new Header("Peut être cuisiné", { propName: "is_cookable", type: "bool", centered: true }),
 										new Header("Date de péremption min.", { propName: "use_by_date_min", type: "date" }),
 										new Header("Date de péremption max.", { propName: "use_by_date_max", type: "date" })
 									]}

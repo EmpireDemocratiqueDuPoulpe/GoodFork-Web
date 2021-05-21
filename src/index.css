@@ -31,8 +31,65 @@ body {
   overflow: hidden;
 }
 
+/*
+  Not working at all
+.ellipsis-multiline {
+  position: relative;
+  text-align: justify;
+  /* max-height = line-height (1.2) * lines max number (3) * /
+  max-height: 3.6em;
+  line-height: 1.2em;
+  margin-right: -1em;
+  padding-right: 1em;
+  overflow: hidden;
+}
+
+.ellipsis-multiline:before {
+  content: "...";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.ellipsis-multiline:after {
+  content: "";
+  position: absolute;
+  right: 0;
+  width: 1em;
+  height: 1em;
+  margin-top: 0.2em;
+  /* bg color = bg color under block * /
+  background: white;
+}*/
+
 .capitalize::first-letter { text-transform: uppercase; }
 
 .centered-text { text-align: center; }
 
 .no-padding { padding: 0 !important; }
+
+.contain-img, .cover-img { position:relative; overflow:hidden; }
+.contain-img img {
+  position: absolute;
+  top: -10000%;
+  right: -10000%;
+  bottom: -10000%;
+  left:-10000%;
+  max-width: 10%;
+  max-height: 10%;
+  margin: auto auto;
+  -webkit-transform:scale(10);
+  transform: scale(10);
+}
+.cover-img img {
+  position: absolute;
+  top: -10000%;
+  right: -10000%;
+  bottom: -10000%;
+  left:-10000%;
+  min-width: 1000%;
+  min-height: 1000%;
+  margin: auto auto;
+  -webkit-transform:scale(0.1);
+  transform: scale(0.1);
+}

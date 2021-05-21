@@ -1,6 +1,40 @@
 /* ---- Menu box -------------------------------- */
 /* -- Container */
 .menu-box {
-  background: salmon;
+  box-sizing: border-box;
+  width: 200px;
+  height: 280px;
+  padding: 10px;
+  background: #EBEBEB;
   cursor: pointer;
+}
+
+.menu-box:hover {
+  background: #E1E1E1;
+}
+
+/* -- Menu name */
+.mb-name {
+  text-align: center;
+  margin: 0;
+}
+
+/* -- Menu illustration */
+.mb-illustration {
+  position: relative;
+  text-align: center;
+  width: 180px;
+  height: 180px;
+  overflow: hidden;
+}
+
+/* -- Menu description */
+.mb-description {
+  display: inline-block;
+  font-size: 0.8em;
+  height: 3.3em; /* line-height * {NUMBER OF LINES} */
+  line-height: 1.1em;
+  font-style: italic;
+  word-break: break-all;
+  overflow: hidden;
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Index from "../Index/Index.js";
 import Staff from "../Staff/Staff.js";
 import Stock from "../Stock/Stock.js";
@@ -7,6 +7,8 @@ import Menus from "../Menus/Menus.js";
 import MenuDetails from "../MenuDetails/MenuDetails.js";
 import Tables from "../Tables/Tables.js";
 import Errors from "../Errors/Errors.js";
+import AppLogo from "../../components/AppLogo/AppLogo.js";
+import HeaderSection, { SectionItem } from "../../components/HeaderSection/HeaderSection.js";
 import "./App.css";
 
 export default function App() {
@@ -14,20 +16,20 @@ export default function App() {
 		<Router>
 			<div className="App">
 				<header className="App-header">
-					<h1><Link to="/">The Good Fork - Gestion</Link></h1>
+					<h1>
+						<AppLogo/>
+					</h1>
 
-					<h2>--&gt; Modifier</h2>
-					<ul>
-						<li><Link to="/staff">Le staff</Link></li>
-						<li><Link to="/tables">Les tables</Link></li>
-						<li><Link to="/menus">Le menu</Link></li>
-						<li><Link to="/stock">Le stock</Link></li>
-					</ul>
+					<HeaderSection title="Modifier">
+						<SectionItem name="Le staff" link="/staff"/>
+						<SectionItem name="Les tables" link="/tables"/>
+						<SectionItem name="Le menu" link="/menus"/>
+						<SectionItem name="Le stock" link="/stock"/>
+					</HeaderSection>
 
-					<h2>--&gt; Voir</h2>
-					<ul>
-						<li><Link to="/stats">Les statistiques</Link></li>
-					</ul>
+					<HeaderSection title="Voir">
+						<SectionItem name="Les statistiques" link="/stats"/>
+					</HeaderSection>
 				</header>
 
 				<div className="App-body">

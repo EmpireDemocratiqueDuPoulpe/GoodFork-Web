@@ -68,15 +68,16 @@ export default function Tables() {
 							<React.Fragment>
 								<AdvancedTable
 									headers={[
-										new Header("ID", { propName: "table_id", readonly: true, required: true }),
+										new Header("ID", { propName: "table_id", type: "number", required: true, readonly: true, hidden: true }),
 										new Header("Nom", { propName: "name" }),
 										new Header("Capacité", { propName: "capacity", type: "number", required: true }),
-										new Header("Est disponible", { propName: "is_available", type: "bool" }),
+										new Header("Est disponible", { propName: "is_available", type: "bool", centered: true }),
 									]}
 									data={tables}
 									onAdd={addTable}
 									onUpdate={updateTable}
 									onDelete={deleteTable}
+									autoID={true}
 								/>
 							</React.Fragment>
 						) : <ErrorDisplay error={error}/>}
