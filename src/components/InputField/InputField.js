@@ -16,7 +16,8 @@ function InputField(props) {
 		onChange(
 			type === "checkbox" ? event.target.checked :
 				type === "file" ? event.target.files[0] :
-					event.target.value
+					type === "number" ? (event.target.value.replace(",", ".") * 1) :
+						event.target.value
 		);
 	};
 
@@ -92,7 +93,7 @@ function InputField(props) {
 	};
 
 	return (
-		<div className={`input-field${error ? " field-error" : ""}${inline ? " field-inline" : ""}`}>
+		<div className={`input-field field-${type}${error ? " field-error" : ""}${inline ? " field-inline" : ""}`}>
 			{label && <label htmlFor={id}>{label}</label>}
 			{renderInput()}
 		</div>

@@ -1,4 +1,23 @@
 /* ---- Input field ----------------------------- */
-.field-inline { display: inline-block; }
+/* -- Container */
+.input-field {
+  display: block;
+  width: 100%;
+}
 
+.input-field.field-inline { display: inline-block; }
+
+/* -- Inputs */
+.input-field input {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* -- Selects */
+.input-field select {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* -- Textarea */
 .field-not-resizable { resize: none; }
