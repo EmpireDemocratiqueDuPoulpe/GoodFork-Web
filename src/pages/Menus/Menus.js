@@ -4,6 +4,7 @@ import MenusDB from "../../global/MenusDB.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
 import MenuBox from "../../components/MenuBox/MenuBox.js";
+import "./Menus.css";
 
 export default function Menus() {
 	const [ menus, setMenus ] = useState([]);
@@ -39,11 +40,11 @@ export default function Menus() {
 				{loaded ? (
 					<React.Fragment>
 						{!error ? (
-							<React.Fragment>
+							<div className="menus-container">
 								{menus.map((menu, index) => {
 									return <MenuBox key={index} menu={menu} onClick={setClickedMenu}/>;
 								})}
-							</React.Fragment>
+							</div>
 						) : <ErrorDisplay error={error}/>}
 					</React.Fragment>
 				) : <LoadingDisplay/>}

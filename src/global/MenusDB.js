@@ -1,5 +1,5 @@
 import { sendQuery, sendFiles } from "./Functions.js";
-import config from "../config/config.js";
+import config, { API_FILES_URI } from "../config/config.js";
 
 const { api } = config;
 
@@ -51,11 +51,13 @@ async function getTypesAsSelect() {
 
 /* ---- UPDATE ---------------------------------- */
 async function update(menu) {
-	return sendQuery(api.menus.update, {
+	console.log(menu);
+	return sendQuery(api.menus.update, { "Content-Type": "application/json" }, {
 		menu_id: menu.menu_id,
 		type_id: menu.type_id,
 		name: menu.name,
-		description: menu.description
+		description: menu.description,
+		price: menu.price
 	});
 }
 
@@ -81,6 +83,13 @@ async function delIngredient(ingredient) {
 	});
 }
 
+/* ---- Menu illustration ----------------------- */
+function buildIllustrationURI(uri) {
+	return uri
+		? uri.startsWith("http") ? uri : `${API_FILES_URI}/${uri}`
+		: null;
+}
+
 /* ---- EXPORT ---------------------------------- */
 const MenusDB = {
 	uploadIllustration,
@@ -91,6 +100,7 @@ const MenusDB = {
 	update,
 	updateIngredient,
 	delete: del,
-	deleteIngredient: delIngredient
+	deleteIngredient: delIngredient,
+	buildIllustrationURI
 };
 export default MenusDB;
