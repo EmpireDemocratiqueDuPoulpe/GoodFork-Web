@@ -3,7 +3,6 @@ import { Redirect, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import MenusDB from "../../global/MenusDB.js";
 import UnitsDB from "../../global/UnitsDB.js";
-import { API_FILES_URI } from "../../config/config.js";
 import Modal, { ModalError } from "../../components/Modal/Modal.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
@@ -186,7 +185,7 @@ class MenuDetails extends React.Component{
 									<span onClick={() => this.setState({ deleteModal: true })}>Supprimer</span>
 
 									<div className="menu-infos">
-										<img src={`${API_FILES_URI}/${menu.image_path}`} alt="Illustration du plat"/>
+										<img src={MenusDB.buildIllustrationURI(menu.image_path)} alt="Illustration du plat"/>
 										<span>Image: <InputField
 											form={uploadFormId}
 											type="file"
@@ -208,6 +207,12 @@ class MenuDetails extends React.Component{
 											value={menu.description}
 											placeholder="Description"
 											onChange={value => this.handleChange("description", value)}
+										/></span>
+										<span>Prix: <InputField
+											form={updFormId}
+											type="number"
+											value={menu.price}
+											onChange={value => this.handleChange("price", value)}
 										/></span>
 									</div>
 
