@@ -3,9 +3,14 @@ export const API_URI = "http://localhost:8080/api";
 export const API_FILES_URI = "http://localhost:8080/images";
 
 const config = {
+	auth: {
+		roleLevel: "owner"
+	},
 	api: {
 		headers: { Accept: "application/json" },
 		users: {
+			logIn: { method: "post", uri: `${API_URI}/users/login` },
+			logInToken: { method: "post", uri: `${API_URI}/users/login/token` },
 			update: { method: "put", uri: `${API_URI}/users` }
 		},
 		staff: {

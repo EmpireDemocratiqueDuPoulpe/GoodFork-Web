@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
+import withAuth from "../../components/Auth/withAuth.js";
 import TablesDB from "../../global/TablesDB.js";
 import { ModalError } from "../../components/Modal/Modal.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
 import AdvancedTable, { Header } from "../../components/AdvancedTable/AdvancedTable.js";
 
-export default function Tables() {
+function Tables() {
 	const [ tables, setTables ] = useState();
 	const [ loaded, setLoaded ] = useState(false);
 	const [ error, setError ] = useState();
@@ -87,3 +88,5 @@ export default function Tables() {
 		</React.Fragment>
 	);
 }
+
+export default withAuth(Tables);

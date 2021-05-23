@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import MenusDB from "../../global/MenusDB.js";
+import withAuth from "../../components/Auth/withAuth.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
 import MenuBox from "../../components/MenuBox/MenuBox.js";
 import "./Menus.css";
 
-export default function Menus() {
+function Menus() {
 	const [ menus, setMenus ] = useState([]);
 	const [ clickedMenu, setClickedMenu ] = useState();
 	const [ loaded, setLoaded ] = useState(false);
@@ -52,3 +53,5 @@ export default function Menus() {
 		</React.Fragment>
 	);
 }
+
+export default withAuth(Menus);

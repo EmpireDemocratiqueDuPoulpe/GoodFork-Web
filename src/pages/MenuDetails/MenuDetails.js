@@ -3,6 +3,7 @@ import { Redirect, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import MenusDB from "../../global/MenusDB.js";
 import UnitsDB from "../../global/UnitsDB.js";
+import withAuth from "../../components/Auth/withAuth.js";
 import Modal, { ModalError } from "../../components/Modal/Modal.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
@@ -258,4 +259,4 @@ MenuDetails.propTypes = {
 	})
 };
 
-export default MenuDetails;
+export default withAuth(MenuDetails);

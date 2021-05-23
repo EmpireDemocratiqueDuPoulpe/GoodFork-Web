@@ -1,7 +1,7 @@
 import { sendQuery } from "./Functions.js";
 import config from "../config/config.js";
 
-const { api } = config;
+const { auth, api } = config;
 
 /* ---- CREATE ---------------------------------- */
 async function addStaff(member) {
@@ -14,6 +14,21 @@ async function addStaff(member) {
 }
 
 /* ---- READ ------------------------------------ */
+async function logIn(email, password) {
+	return sendQuery(api.users.logIn, { "Content-Type": "application/json" }, {
+		email: email,
+		password: password,
+		roleLevel: auth.roleLevel
+	});
+}
+
+async function logInWithToken(token) {
+	return sendQuery(api.users.logInToken, { "Content-Type": "application/json" }, {
+		token: token,
+		roleLevel: auth.roleLevel
+	});
+}
+
 async function getStaff() {
 	return sendQuery(api.staff.getAll);
 }
@@ -37,5 +52,5 @@ async function deleteStaff(member) {
 }
 
 /* ---- EXPORT ---------------------------------- */
-const UsersDB = { addStaff, getStaff, update, deleteStaff };
+const UsersDB = { addStaff, logIn, logInWithToken, getStaff, update, deleteStaff };
 export default UsersDB;

@@ -3,10 +3,11 @@ import { ModalError } from "../../components/Modal/Modal.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
 import AdvancedTable, { Header, MixedHeader } from "../../components/AdvancedTable/AdvancedTable.js";
+import withAuth from "../../components/Auth/withAuth.js";
 import StockDB from "../../global/StockDB.js";
 import UnitsDB from "../../global/UnitsDB.js";
 
-export default function Stock() {
+function Stock() {
 	const [ stock, setStock ] = useState();
 	const [ units, setUnits ] = useState();
 	const [ stockLoaded, setStockLoaded ] = useState(false);
@@ -118,3 +119,5 @@ export default function Stock() {
 		</React.Fragment>
 	);
 }
+
+export default withAuth(Stock);

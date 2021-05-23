@@ -3,11 +3,12 @@ import { ModalError } from "../../components/Modal/Modal.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
 import AdvancedTable, { Header } from "../../components/AdvancedTable/AdvancedTable.js";
+import withAuth from "../../components/Auth/withAuth.js";
 import UsersDB from "../../global/UsersDB.js";
 import RolesDB from "../../global/RolesDB.js";
 import "./Staff.css";
 
-export default function Staff() {
+function Staff() {
 	const [ members, setMembers ] = useState();
 	const [ roles, setRoles ] = useState();
 	const [ membersLoaded, setMembersLoaded ] = useState(false);
@@ -113,3 +114,5 @@ export default function Staff() {
 		</React.Fragment>
 	);
 }
+
+export default withAuth(Staff);
