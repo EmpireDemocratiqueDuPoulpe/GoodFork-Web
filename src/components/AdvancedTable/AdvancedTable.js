@@ -218,7 +218,7 @@ class AdvancedTable extends React.Component {
 	
 	render() {
 		const { addFormId, updateFormId, updateRow } = this.state;
-		const { headers, data, onAdd, onUpdate, onDelete, autoID } = this.props;
+		const { headers, data, onAdd, onUpdate, onDelete, autoID, centered } = this.props;
 		const showAdd = !!onAdd;
 		const showActions = showAdd || (!!onUpdate || !!onDelete);
 
@@ -227,7 +227,7 @@ class AdvancedTable extends React.Component {
 				{showAdd && <form id={addFormId} onSubmit={event => this.handleSubmit(event, "add")}/>}
 				{!!onUpdate && <form id={updateFormId} onSubmit={event => this.handleSubmit(event, "update")}/>}
 
-				<table className="advanced-table">
+				<table className={`advanced-table ${centered ? "advanced-table-centered" : ""}`}>
 					<thead>
 						<tr>
 							{autoID && <th>-</th>}
@@ -380,6 +380,7 @@ class AdvancedTable extends React.Component {
 			return (
 				<InputField
 					form={addFormId}
+					className="field-full-width"
 					type={cellType.inputType()}
 					selectValues={header.selectOptions()}
 					step={cellType.step()}
@@ -403,7 +404,8 @@ AdvancedTable.propTypes = {
 	onAdd: PropTypes.func,
 	onUpdate: PropTypes.func,
 	onDelete: PropTypes.func,
-	autoID: PropTypes.bool
+	autoID: PropTypes.bool,
+	centered: PropTypes.bool
 };
 
 export default AdvancedTable;

@@ -79,6 +79,7 @@ function Tables() {
 									onUpdate={updateTable}
 									onDelete={deleteTable}
 									autoID={true}
+									centered={true}
 								/>
 							</React.Fragment>
 						) : <ErrorDisplay error={error}/>}

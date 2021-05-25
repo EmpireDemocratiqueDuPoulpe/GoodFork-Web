@@ -1,9 +1,7 @@
 /* ---- Advanced Table -------------------------- */
 /* -- Table */
-.advanced-table {
-  margin: 0 auto;
-  border-collapse: collapse;
-}
+.advanced-table { border-collapse: collapse; }
+.advanced-table.advanced-table-centered { margin: 0 auto; }
 
 /* -- Table head */
 .advanced-table thead {

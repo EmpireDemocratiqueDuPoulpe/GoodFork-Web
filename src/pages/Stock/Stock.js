@@ -110,6 +110,7 @@ function Stock() {
 									onAdd={addStock}
 									onUpdate={updateStock}
 									onDelete={deleteStock}
+									centered={true}
 								/>
 							</React.Fragment>
 						) : <ErrorDisplay error={error}/>}
