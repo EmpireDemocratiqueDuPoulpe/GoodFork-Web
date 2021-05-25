@@ -1,0 +1,36 @@
+/* ---- Price Field ----------------------------- */
+/* -- Container */
+.price-field {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* -- Current price */
+.pf-price {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  font-size: 2em;
+}
+
+.pf-price .input-field { height: 50px; }
+.pf-price .input-field input { width: 85px; }
+
+/* Remove arrows on input type number */
+.pf-price .input-field input::-webkit-outer-spin-button, /* Chrome, Safari, Edge, Opera */
+.pf-price .input-field input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.pf-price .input-field input[type=number] { -moz-appearance: textfield; } /* Firefox */
+
+.pf-price.pf-below-recommended {
+  color: red;
+}
+
+/* -- Recommended price */
+.pf-recommended-price p {
+  margin: 0;
+  color: #8A8A8A;
+}
