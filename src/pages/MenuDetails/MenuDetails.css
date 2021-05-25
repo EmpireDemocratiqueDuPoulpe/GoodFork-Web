@@ -1,2 +1,37 @@
 /* ---- Menu details ---------------------------- */
-img { width: 200px; }
+/* -- Menu infos */
+.menu-infos {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.mi-type-description {
+  box-sizing: border-box;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  padding: 10px 0;
+}
+
+.mi-description { flex: 1; }
+
+.mi-type-description .mi-buttons {
+  text-align: right;
+  margin-top: 10px;
+}
+
+.mi-type-description .mi-button {
+  height: 30px;
+  cursor: pointer;
+}
+
+.menu-infos .price-field { flex: 0; }
+
+/* -- Menu content */
+.menu-content h4 { margin: 0 0 15px 0; }

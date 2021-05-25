@@ -37,24 +37,24 @@ function Modal(props) {
 
 				<div className="modal-body">
 					<p>{message}</p>
-				</div>
 
-				<div className="modal-buttons">
-					{onOk && (
-						<button className="modal-button modal-ok" onClick={onOk}>Valider</button>
-					)}
-					{onYes && (
-						<button className="modal-button modal-yes" onClick={onYes}>Oui</button>
-					)}
-					{onCancel && (
-						<button className="modal-button modal-cancel" onClick={onCancel}>Annuler</button>
-					)}
-					{onNo && (
-						<button className="modal-button modal-no" onClick={onNo}>Non</button>
-					)}
-					{(!onOk && !onYes && !onCancel && !onNo) && (
-						<button className="modal-button modal-close" onClick={handleClose}>Fermer</button>
-					)}
+					<div className="modal-buttons">
+						{onOk && (
+							<button className="modal-button modal-ok" onClick={onOk}>Valider</button>
+						)}
+						{onYes && (
+							<button className="modal-button modal-yes" onClick={onYes}>Oui</button>
+						)}
+						{onCancel && (
+							<button className="modal-button modal-cancel" onClick={onCancel}>Annuler</button>
+						)}
+						{onNo && (
+							<button className="modal-button modal-no" onClick={onNo}>Non</button>
+						)}
+						{(!onOk && !onYes && !onCancel && !onNo) && (
+							<button className="modal-button modal-close" onClick={handleClose}>Fermer</button>
+						)}
+					</div>
 				</div>
 			</div>
 		</div>

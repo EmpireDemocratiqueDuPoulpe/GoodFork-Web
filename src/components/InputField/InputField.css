@@ -2,22 +2,44 @@
 /* -- Container */
 .input-field {
   display: block;
-  width: 100%;
 }
 
-.input-field.field-inline { display: inline-block; }
+.input-field.field-inline {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+/* -- Labels */
+.input-field label { white-space: nowrap; }
 
 /* -- Inputs */
 .input-field input {
   box-sizing: border-box;
   width: 100%;
+  height: 100%;
+  color: inherit;
 }
+.input-field input:focus { outline: none; }
 
 /* -- Selects */
 .input-field select {
   box-sizing: border-box;
   width: 100%;
+  height: 100%;
 }
+.input-field select:focus { outline: none; }
 
 /* -- Textarea */
+.input-field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}
+
+/* -- Special classes */
+.field-full-width { width: 100%; }
+.field-full-height { height: 100%; }
 .field-not-resizable { resize: none; }

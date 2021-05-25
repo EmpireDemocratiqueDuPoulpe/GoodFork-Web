@@ -4,8 +4,8 @@ import "./InputField.css";
 
 function InputField(props) {
 	const {
-		form, autoComplete, autoFocus, disabled, readonly, hidden, required, resize, type, value, selectValues, multiple,
-		label, step, minLength, maxLength, accept, placeholder, onChange, error, inline
+		form, className, autoComplete, autoFocus, disabled, readonly, hidden, required, resize, type, value,
+		selectValues, multiple, label, labelSide, step, minLength, maxLength, accept, placeholder, onChange, error, inline
 	} = props;
 	const id = label
 		? `${label.replace(/[`~!@#$%^&*()\s_|+\-=?;:'",.<>{}[\]\\/]/gi, "").toLowerCase()}-input`
@@ -93,15 +93,17 @@ function InputField(props) {
 	};
 
 	return (
-		<div className={`input-field field-${type}${error ? " field-error" : ""}${inline ? " field-inline" : ""}`}>
-			{label && <label htmlFor={id}>{label}</label>}
+		<div className={`input-field field-${type}${error ? " field-error" : ""}${inline ? " field-inline" : ""}${className ? ` ${className}` : ""}`}>
+			{(label && labelSide === "left") && <label htmlFor={id}>{label}</label>}
 			{renderInput()}
+			{(label && labelSide === "right") && <label htmlFor={id}>{label}</label>}
 		</div>
 	);
 }
 
 InputField.propTypes = {
 	form: PropTypes.string,
+	className: PropTypes.string,
 	autoComplete: PropTypes.string,
 	autoFocus: PropTypes.bool,
 	disabled: PropTypes.bool,
@@ -121,6 +123,7 @@ InputField.propTypes = {
 	maxLength: PropTypes.number,
 	accept: PropTypes.string,
 	label: PropTypes.string,
+	labelSide: PropTypes.oneOf(["left", "right"]),
 	placeholder: PropTypes.string,
 	onChange: PropTypes.func,
 	error: PropTypes.bool,
@@ -138,6 +141,7 @@ InputField.defaultProps = {
 	selectValues: [],
 	multiple: false,
 	minLength: 0,
+	labelSide: "left",
 	error: false,
 	inline: false
 };

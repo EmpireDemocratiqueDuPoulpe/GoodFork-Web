@@ -9,6 +9,8 @@ import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
 import AdvancedTable, { Header, MixedHeader } from "../../components/AdvancedTable/AdvancedTable.js";
 import InputField from "../../components/InputField/InputField.js";
+import ImageUpload from "../../components/InputField/ImageUpload/ImageUpload.js";
+import PriceField from "../../components/InputField/PriceField/PriceField.js";
 import "./MenuDetails.css";
 
 class MenuDetails extends React.Component{
@@ -155,9 +157,12 @@ class MenuDetails extends React.Component{
 			<React.Fragment>
 				<form id={updFormId} onSubmit={this.handleSubmit}/>
 				<form id={uploadFormId} onSubmit={this.handleUploadSubmit} encType="multipart/form-data"/>
+
 				<div className="Page-header">
-					<h3>Menu{menuLoaded ? (
-						<span> - <InputField
+					<Link className="Ph-back" to="/menus">&lt;</Link>
+					<h3>{menuLoaded ? "Menu -" : "Menu"}</h3>
+					{menuLoaded ? (
+						<InputField
 							form={updFormId}
 							type="text"
 							value={menu.name}
@@ -165,8 +170,8 @@ class MenuDetails extends React.Component{
 							onChange={value => this.handleChange("name", value)}
 							inline={true}
 							required={true}
-						/></span>
-					) : ""}</h3>
+						/>
+					) : null}
 				</div>
 
 				<div className="Page-body">
@@ -182,65 +187,78 @@ class MenuDetails extends React.Component{
 										onYes={() => this.deleteMenu(menu)}
 										onNo={() => this.setState({ deleteModal: false })}
 									/>
-									<Link to="/menus">&lt;-- Retour</Link>
-									<span onClick={() => this.setState({ deleteModal: true })}>Supprimer</span>
 
 									<div className="menu-infos">
-										<img src={MenusDB.buildIllustrationURI(menu.image_path)} alt="Illustration du plat"/>
-										<span>Image: <InputField
+										<ImageUpload
 											form={uploadFormId}
-											type="file"
-											onChange={value => this.handleUploadSubmit(value)}
+											defaultImage={MenusDB.buildIllustrationURI(menu.image_path)}
 											accept="image/jpeg,image/png,image/bmp"
-										/></span>
-										<span>Type: <InputField
+											onChange={value => this.handleUploadSubmit(value)}
+										/>
+
+										<div className="mi-type-description">
+											<InputField
+												form={updFormId}
+												type="select"
+												label="Type :"
+												value={menu.type_id}
+												selectValues={menuTypes}
+												onChange={value => this.handleChange("type_id", value)}
+												required={true}
+												inline={true}
+											/>
+											<InputField
+												form={updFormId}
+												className="mi-description"
+												type="textarea"
+												resize="none"
+												value={menu.description}
+												placeholder="Description"
+												onChange={value => this.handleChange("description", value)}
+											/>
+
+											<div className="mi-buttons">
+												<input form={updFormId} className="mi-button" type="submit" value="Enregistrer"/>
+												<button className="mi-button" onClick={() => this.setState({ deleteModal: true })}>Supprimer</button>
+											</div>
+										</div>
+
+										<PriceField
 											form={updFormId}
-											type="select"
-											value={menu.type_id}
-											selectValues={menuTypes}
-											onChange={value => this.handleChange("type_id", value)}
-											required={true}
-										/></span>
-										<span>Description: <InputField
-											form={updFormId}
-											type="textarea"
-											resize="none"
-											value={menu.description}
-											placeholder="Description"
-											onChange={value => this.handleChange("description", value)}
-										/></span>
-										<span>Prix: <InputField
-											form={updFormId}
-											type="number"
 											value={menu.price}
+											recommendedPrice={10}
+											step={0.01}
 											onChange={value => this.handleChange("price", value)}
-										/></span>
+											required={true}
+										/>
 									</div>
 
-									<h4>Ingrédients: </h4>
-									<AdvancedTable
-										headers={[
-											new Header("ID", { propName: "ingredient_id", type: "number", required: true, readonly: true, hidden: true }),
-											new Header("ID Stock", { propName: "stock_id", type: "number", required: true, readonly: true, hidden: true }),
-											new Header("Nom", { propName: "name", required: true }),
-											new MixedHeader(
-												new Header("Quantité", { propName: "units", type: "float" }),
-												new Header("Unité", {
-													propName: "units_unit_id",
-													displayPropName: "units_unit",
-													type: "select",
-													selectOpts: units,
-													hideTitle: true
-												})
-											)
-										]}
-										data={menu.ingredients}
-										onAdd={this.addIngredient}
-										onUpdate={this.updateIngredient}
-										onDelete={this.deleteIngredient}
-										autoID={true}
-									/>
-									<input form={updFormId} type="submit" value="Enregistrer"/>
+									<div className="menu-content">
+										<h4>Ingr&eacute;dients: </h4>
+
+										<AdvancedTable
+											headers={[
+												new Header("ID", { propName: "ingredient_id", type: "number", required: true, readonly: true, hidden: true }),
+												new Header("ID Stock", { propName: "stock_id", type: "number", required: true, readonly: true, hidden: true }),
+												new Header("Nom", { propName: "name", required: true }),
+												new MixedHeader(
+													new Header("Quantité", { propName: "units", type: "float" }),
+													new Header("Unité", {
+														propName: "units_unit_id",
+														displayPropName: "units_unit",
+														type: "select",
+														selectOpts: units,
+														hideTitle: true
+													})
+												)
+											]}
+											data={menu.ingredients}
+											onAdd={this.addIngredient}
+											onUpdate={this.updateIngredient}
+											onDelete={this.deleteIngredient}
+											autoID={true}
+										/>
+									</div>
 								</React.Fragment>
 							) : <ErrorDisplay/>}
 						</React.Fragment>
