@@ -4,14 +4,19 @@ import PropTypes from "prop-types";
 import "./HeaderSection.css";
 
 export function SectionItem(props) {
-	const { name, link } = props;
+	const { name, link, disabled } = props;
 	const location = useLocation();
-	const content = link
+	const content = link && !disabled
 		? <Link to={link}>{name}</Link>
 		: <React.Fragment>{name}</React.Fragment>;
+	let classes = "hs-item";
+
+	if (link) classes += " hs-link";
+	if (link  && location.pathname === link) classes += " hs-current-link";
+	if (disabled) classes += " hs-disabled";
 
 	return (
-		<li className={`hs-item${link ? " hs-link" : ""}${link && location.pathname === link ? " hs-current-link" : ""}`}>
+		<li className={classes}>
 			{content}
 		</li>
 	);
@@ -19,7 +24,8 @@ export function SectionItem(props) {
 
 SectionItem.propTypes = {
 	name: PropTypes.string.isRequired,
-	link: PropTypes.string
+	link: PropTypes.string,
+	disabled: PropTypes.bool
 };
 
 function HeaderSection(props) {

@@ -1,9 +1,11 @@
 /* ---- Header section -------------------------- */
+/* -- Container */
 .header-section {
   width: 100%;
   margin: 16px 0;
 }
 
+/* -- List */
 .header-section ul {
   box-sizing: border-box;
   width: 100%;
@@ -13,6 +15,7 @@
 }
 
 /* ---- Section item ---------------------------- */
+/* -- Container */
 .hs-item {
   box-sizing: border-box;
   width: 100%;
@@ -21,6 +24,7 @@
   padding: 0 20px;
 }
 
+/* -- Content */
 .hs-item.hs-title {
   font-weight: bold;
   background: #DCDCDC;
@@ -36,6 +40,11 @@
   text-decoration: none;
 }
 
-.hs-current-link a {
-  color: #e79087;
+/* -- Special classes */
+.hs-current-link a { color: #e79087; }
+
+.hs-disabled {
+  color: #AAAAAA;
+  cursor: not-allowed;
 }
+.hs-disabled:hover { background: none; }
