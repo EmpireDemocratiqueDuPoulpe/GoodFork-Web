@@ -33,6 +33,7 @@ const config = {
 		menus: {
 			uploadIllustration: { method: "post", uri: `${API_URI}/menus/upload/illustration` },
 			getAll: { method: "get", uri: `${API_URI}/menus/all` },
+			getAllOrderedByType: { method: "get", uri: `${API_URI}/menus/all?orderBy=type_id` },
 			getById: { method: "get", uri: `${API_URI}/menus` },
 			update: { method: "put", uri: `${API_URI}/menus` },
 			delete: { method: "delete", uri: `${API_URI}/menus` }

@@ -21,8 +21,8 @@ async function addIngredient(menu, ingredient) {
 }
 
 /* ---- READ ------------------------------------ */
-async function getAll() {
-	return sendQuery(api.menus.getAll);
+async function getAll(orderedByType = false) {
+	return sendQuery(orderedByType ? api.menus.getAllOrderedByType : api.menus.getAll);
 }
 
 async function getById(menu_id) {
@@ -96,6 +96,7 @@ const MenusDB = {
 	addIngredient,
 	getAll,
 	getById,
+	getTypes,
 	getTypesAsSelect,
 	update,
 	updateIngredient,

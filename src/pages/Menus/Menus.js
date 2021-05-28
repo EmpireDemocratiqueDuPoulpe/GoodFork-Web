@@ -5,24 +5,43 @@ import withAuth from "../../components/Auth/withAuth.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
 import MenuBox from "../../components/MenuBox/MenuBox.js";
+import AddMenuBox from "../../components/MenuBox/AddMenuBox/AddMenuBox.js";
 import "./Menus.css";
 
 function Menus() {
 	const [ menus, setMenus ] = useState([]);
+	const [ menusTypes, setMenusTypes ] = useState([]);
 	const [ clickedMenu, setClickedMenu ] = useState();
-	const [ loaded, setLoaded ] = useState(false);
+	const [ menusLoaded, setMenusLoaded ] = useState(false);
+	const [ menusTypesLoaded, setMenusTypesLoaded ] = useState(false);
 	const [ error, setError ] = useState();
 
 	const getMenus = async () => {
-		MenusDB.getAll()
+		MenusDB.getAll(true)
 			.then(response => {
 				setMenus(response.error ? null : response.menus);
-				setLoaded(true);
+				setMenusLoaded(true);
 				setError(response.error ? response : null);
+
+				if (!response.error) getMenusTypes();
 			})
 			.catch(error => {
 				setMenus([]);
-				setLoaded(true);
+				setMenusLoaded(true);
+				setError(error);
+			});
+	};
+
+	const getMenusTypes = async () => {
+		MenusDB.getTypes()
+			.then(response => {
+				setMenusTypes(response.error ? null : response.types);
+				setMenusTypesLoaded(true);
+				setError(response.error ? response : null);
+			})
+			.catch(error => {
+				setMenusTypes([]);
+				setMenusTypesLoaded(true);
 				setError(error);
 			});
 	};
@@ -38,12 +57,25 @@ function Menus() {
 			</div>
 
 			<div className="Page-body">
-				{loaded ? (
+				{menusLoaded && menusTypesLoaded ? (
 					<React.Fragment>
 						{!error ? (
 							<div className="menus-container">
-								{menus.map((menu, index) => {
-									return <MenuBox key={index} menu={menu} onClick={setClickedMenu}/>;
+								{menusTypes.map((type, typeIndex) => {
+									return (
+										<div className="mc-category" key={typeIndex}>
+											<div className="mc-category-header">
+												<h3 className="capitalize">{type.name}</h3>
+											</div>
+
+											<div className="mc-category-body">
+												{menus.filter(menu => menu.type === type.name).map((menu, menuIndex) => {
+													return <MenuBox key={menuIndex} menu={menu} onClick={setClickedMenu}/>;
+												})}
+												<AddMenuBox/>
+											</div>
+										</div>
+									);
 								})}
 							</div>
 						) : <ErrorDisplay error={error}/>}
