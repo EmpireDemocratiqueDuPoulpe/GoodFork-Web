@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Index from "../Index/Index.js";
 import LogIn from "../LogIn/LogIn.js";
+import LogOut from "../LogOut/LogOut.js";
 import Staff from "../Staff/Staff.js";
 import Stock from "../Stock/Stock.js";
 import Menus from "../Menus/Menus.js";
@@ -31,12 +32,18 @@ export default function App() {
 					<HeaderSection title="Voir">
 						<SectionItem name="Les statistiques" link="/stats"/>
 					</HeaderSection>
+
+					<HeaderSection title="Mon compte">
+						<SectionItem name="Paramètres" link="/settings" disabled={true}/>
+						<SectionItem name="Déconnexion" link="/logout"/>
+					</HeaderSection>
 				</header>
 
 				<div className="App-body">
 					<Switch>
 						<Route exact path={["/", "//", "/index"]} component={Index}/>
 						<Route path="/login" component={LogIn}/>
+						<Route path="/logout" component={LogOut}/>
 						<Route path="/staff" component={Staff}/>
 						<Route path="/stock" component={Stock}/>
 						<Route path="/menus" component={Menus}/>
