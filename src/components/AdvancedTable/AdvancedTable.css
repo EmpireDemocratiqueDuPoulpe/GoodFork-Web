@@ -5,26 +5,30 @@
 
 /* -- Table head */
 .advanced-table thead {
-  background-color: #e79087;
-  background-image: linear-gradient(315deg, #e79087 0%, #fcd181 74%);
+  background-color: #F39C2C;
+  color: #2a1d0f;
 }
 
 .advanced-table th {
-  height: 30px;
+  height: 40px;
   padding: 0 10px;
 }
 
-.at-required-mark { color: red; }
+.at-required-mark { color: #4d3417; }
 
 /* -- Rows */
-.advanced-table tbody tr:hover { background: #E6E6E6; }
-.at-update-row { background: #E6E6E6; }
+.advanced-table tbody tr:nth-child(even) { background: #201E1E; }
+.advanced-table tbody tr:nth-child(odd) { background: #252323; }
+
+.advanced-table tbody tr:nth-child(even):hover,
+.advanced-table tbody tr:nth-child(odd):hover { background: #2F2D2D; }
+
+.at-update-row { background: #2F2D2D !important; }
 
 /* -- Cells */
+.advanced-table td { padding: 5px; }
 .at-hidden { display: none; }
 .at-centered { text-align: center; }
-
-.advanced-table td .input-field { height: 100%; }
 
 .at-multiple-fields div {
   display: flex;
@@ -33,19 +37,29 @@
   align-items: center;
 }
 
+.at-multiple-fields .atmf-item-space:not(:last-child) { margin-right: 5px; }
+
 .at-multiple-fields .input-field { display: inline-block; }
 .at-multiple-fields .field-select { width: 40%; }
 
 /* -- Actions */
+.at-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  height: 100%;
+}
+
 .at-action {
   display: inline-block;
   width: 24px;
   height: 24px;
-  background: cornflowerblue;
   cursor: pointer;
 }
 
-.at-action:not(:last-child) { margin-right: 5px; }
-
-.at-stop-update { background: fuchsia; }
-.at-delete { background: firebrick; }
+.at-update svg { fill: #F39C2C; }
+.at-stop-update svg { fill: #B84526; }
+.at-delete svg { fill: #B84526; }

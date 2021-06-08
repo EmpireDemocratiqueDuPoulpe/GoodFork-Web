@@ -2,6 +2,7 @@
 /* -- Container */
 .input-field {
   display: block;
+  height: 40px;
 }
 
 .input-field.field-inline {
@@ -20,15 +21,49 @@
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  color: inherit;
+  padding: 0 10px;
+  background: #161414;
+  color: white;
+  border: none;
+  border-bottom: 2px #2A2828 solid;
 }
-.input-field input:focus { outline: none; }
+
+.input-field input:focus,
+.input-field input:active {
+  outline: none;
+  border-bottom-color: #F39C2C;
+}
+
+.input-field.red input:focus,
+.input-field.red input:active {
+  outline: none;
+  border-bottom-color: #B84526;
+}
+
+.input-field input[type=email]:not(:placeholder-shown),
+.input-field input[type=number]:not(:placeholder-shown),
+.input-field input[type=password]:not(:placeholder-shown),
+.input-field input[type=search]:not(:placeholder-shown),
+.input-field input[type=tel]:not(:placeholder-shown),
+.input-field input[type=text]:not(:placeholder-shown) { border-bottom-color: #F39C2C; }
+
+.input-field input::placeholder { color: rgba(255, 255, 255, 0.6); }
 
 /* -- Selects */
 .input-field select {
   box-sizing: border-box;
   width: 100%;
   height: 100%;
+  line-height: normal;
+  padding: 0 10px;
+  background: #161414 url("../../assets/images/icons/expand_more_yellow_24dp.svg") no-repeat center right;
+  color: white;
+  border: none;
+  border-bottom: 2px #2A2828 solid;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
 }
 .input-field select:focus { outline: none; }
 
@@ -37,9 +72,62 @@
   box-sizing: border-box;
   width: 100%;
   height: 100%;
+  padding: 10px;
+  background: #161414;
+  color: white;
+  border: none;
+  border-bottom: 2px #2A2828 solid;
+}
+
+.input-field textarea:focus,
+.input-field textarea:active {
+  outline: none;
+  border-bottom-color: #F39C2C;
+}
+
+.input-field textarea:not(:placeholder-shown) { border-bottom-color: #F39C2C; }
+
+.input-field textarea::placeholder { color: rgba(255, 255, 255, 0.6); }
+
+/* -- Checkboxes */
+.input-field .input-checkbox { cursor: pointer; }
+.input-field .input-checkbox input[type=checkbox] { display: none; }
+
+/* -- Date */
+.input-field input[type=date]::-webkit-calendar-picker-indicator {
+  filter: invert(62%) sepia(55%) saturate(704%) hue-rotate(345deg) brightness(103%) contrast(91%);
+}
+
+/* -- Submit / button */
+.input-field input[type=button],
+.input-field input[type=submit] {
+  width: auto;
+  color: white;
+  box-shadow: inset 0 0 0 #F39C2C;
+  cursor: pointer;
+  transition: box-shadow 250ms ease-in, color 250ms ease-in;
+}
+.input-field input[type=button]:hover,
+.input-field input[type=submit]:hover {
+  color: black;
+  box-shadow: inset 0 -40px 0 #F39C2C;
+}
+
+.input-field.red input[type=button],
+.input-field.red input[type=submit] { box-shadow: inset 0 0 0 #B84526; }
+.input-field.red input[type=button]:hover,
+.input-field.red input[type=submit]:hover {
+  color: black;
+  box-shadow: inset 0 -40px 0 #B84526;
 }
 
 /* -- Special classes */
 .field-full-width { width: 100%; }
 .field-full-height { height: 100%; }
+
 .field-not-resizable { resize: none; }
+
+.field-not-empty select,
+.field-not-empty input { border-bottom-color: #F39C2C; }
+.field-not-empty.red select,
+.field-not-empty.red input { border-bottom-color: #B84526; }

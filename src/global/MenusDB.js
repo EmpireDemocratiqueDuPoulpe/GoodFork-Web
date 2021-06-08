@@ -4,6 +4,15 @@ import config, { API_FILES_URI } from "../config/config.js";
 const { api } = config;
 
 /* ---- CREATE ---------------------------------- */
+async function add(menu) {
+	return sendQuery(api.menus.add, { "Content-Type": "application/json" }, {
+		type: menu.type,
+		name: menu.name,
+		description: menu.description,
+		price: menu.price
+	});
+}
+
 async function uploadIllustration(menu, image) {
 	return sendFiles(api.menus.uploadIllustration, {
 		menu_id: menu.menu_id,
@@ -51,7 +60,6 @@ async function getTypesAsSelect() {
 
 /* ---- UPDATE ---------------------------------- */
 async function update(menu) {
-	console.log(menu);
 	return sendQuery(api.menus.update, { "Content-Type": "application/json" }, {
 		menu_id: menu.menu_id,
 		type_id: menu.type_id,
@@ -92,6 +100,7 @@ function buildIllustrationURI(uri) {
 
 /* ---- EXPORT ---------------------------------- */
 const MenusDB = {
+	add,
 	uploadIllustration,
 	addIngredient,
 	getAll,

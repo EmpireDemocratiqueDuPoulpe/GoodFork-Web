@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import MenusDB from "../../global/MenusDB.js";
-import UnitsDB from "../../global/UnitsDB.js";
+import MeasurementsDB from "../../global/MeasurementsDB.js";
 import withAuth from "../../components/Auth/withAuth.js";
 import Modal, { ModalError } from "../../components/Modal/Modal.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
@@ -22,8 +22,8 @@ class MenuDetails extends React.Component{
 			menuLoaded: false,
 			menuTypes: [],
 			menuTypesLoaded: false,
-			units: [],
-			unitsLoaded: false,
+			measurement: [],
+			measurementLoaded: false,
 			updateFields: {},
 			error: false,
 			errorModal: null,
@@ -35,7 +35,7 @@ class MenuDetails extends React.Component{
 	componentDidMount() {
 		this.getMenu().catch();
 		this.getMenuTypes().catch();
-		this.getUnits().catch();
+		this.getMeasurements().catch();
 	}
 
 	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
@@ -53,7 +53,7 @@ class MenuDetails extends React.Component{
 
 		MenusDB.update(updateFields)
 			.then(response => {
-				if (!response.error) this.getMenu();
+				if (!response.error) this.getMenu().catch();
 				else this.setState({ errorModal: response });
 			})
 			.catch(error => this.setState({ errorModal: error }));
@@ -66,7 +66,7 @@ class MenuDetails extends React.Component{
 		if (file) {
 			MenusDB.uploadIllustration(menu, file)
 				.then(response => {
-					if (!response.error) this.getMenu();
+					if (!response.error) this.getMenu().catch();
 					else this.setState({ errorModal: response });
 				})
 				.catch(error => this.setState({ errorModal: error }));
@@ -100,6 +100,15 @@ class MenuDetails extends React.Component{
 			.then(response => this.setState({ redirectTo: response.error ? null : "/menus", errorModal: response.error }))
 			.catch(error => this.setState({ errorModal: error }));
 	};
+
+	calcPrice = () => {
+		//const { menu } = this.state;
+
+		return 0;
+		/*return menu.ingredients.reduce((a, b) => {
+			return a + ((b.unit_price ?? 0) * (b.units ?? 0));
+		}, 0);*/
+	}
 
 	/*****************************************************
 	 * Ingredients
@@ -136,17 +145,17 @@ class MenuDetails extends React.Component{
 	/*****************************************************
 	 * Units
 	 *****************************************************/
-	getUnits = async () => {
-		UnitsDB.getAllAsSelect()
+	getMeasurements = async () => {
+		MeasurementsDB.getAllByTypes()
 			.then(response => {
-				this.setState({ units: response, unitsLoaded: true, error: response.error });
+				this.setState({ measurements: response.measurements, measurementsLoaded: true, error: response.error });
 			})
-			.catch(error => this.setState({ units: [], unitsLoaded: true, error: error }));
+			.catch(error => this.setState({ measurements: [], measurementsLoaded: true, error: error }));
 	};
 
 	render() {
 		const {
-			menu, menuLoaded, menuTypes, menuTypesLoaded, units, unitsLoaded,
+			menu, menuLoaded, menuTypes, menuTypesLoaded, measurements, measurementsLoaded,
 			error, errorModal, deleteModal, redirectTo
 		} = this.state;
 		const updFormId = "update-menu-form";
@@ -176,7 +185,7 @@ class MenuDetails extends React.Component{
 
 				<div className="Page-body">
 					<ModalError error={errorModal}/>
-					{menuLoaded && menuTypesLoaded && unitsLoaded ? (
+					{menuLoaded && menuTypesLoaded && measurementsLoaded ? (
 						<React.Fragment>
 							{!error ? (
 								<React.Fragment>
@@ -218,15 +227,15 @@ class MenuDetails extends React.Component{
 											/>
 
 											<div className="mi-buttons">
-												<input form={updFormId} className="mi-button" type="submit" value="Enregistrer"/>
-												<button className="mi-button" onClick={() => this.setState({ deleteModal: true })}>Supprimer</button>
+												<InputField form={updFormId} className="mi-button" type="submit" value="Mettre à jour"/>
+												<InputField className="red mi-button" type="button" value="Supprimer" onClick={() => this.setState({ deleteModal: true })}/>
 											</div>
 										</div>
 
 										<PriceField
 											form={updFormId}
 											value={menu.price}
-											recommendedPrice={10}
+											recommendedPrice={this.calcPrice()}
 											step={0.01}
 											onChange={value => this.handleChange("price", value)}
 											required={true}
@@ -246,8 +255,9 @@ class MenuDetails extends React.Component{
 													new Header("Unité", {
 														propName: "units_unit_id",
 														displayPropName: "units_unit",
-														type: "select",
-														selectOpts: units,
+														type: "measurementSelect",
+														defaultValue: 1,
+														selectOpts: measurements,
 														hideTitle: true
 													})
 												)

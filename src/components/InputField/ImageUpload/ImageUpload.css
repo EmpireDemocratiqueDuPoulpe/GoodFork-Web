@@ -6,7 +6,7 @@
 .iu-image-box {
   position: relative;
   display: inline-block;
-  background: #E6E6E6;
+  background: #2A2828;
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
@@ -21,21 +21,24 @@
   bottom: 0;
   left: 0;
   opacity: 0;
+  border-radius: 50%;
   transition: opacity 100ms ease-in;
 }
 .iu-image-box:hover::before {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 10;
 }
 .iu-image-box:hover::after {
   background: url("../../../assets/images/icons/file_upload_black_24dp.svg") no-repeat center;
   background-size: 35%;
-  filter: invert(81%) sepia(44%) saturate(528%) hue-rotate(333deg) brightness(105%) contrast(98%);
+  filter: invert(83%) sepia(16%) saturate(1844%) hue-rotate(333deg) brightness(100%) contrast(105%);
   z-index: 11;
 }
 
 .iu-image-box:hover::before { opacity: 1; }
 .iu-image-box:hover::after { opacity: 0.75; }
+
+.iu-image-box img { border-radius: 50%; }
 
 /* -- Image size */
 .iu-image-box {

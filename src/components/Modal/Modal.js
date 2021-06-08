@@ -1,5 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
+import InputField from "../InputField/InputField.js";
 import "./Modal.css";
 
 /*****************************************************
@@ -40,19 +41,19 @@ function Modal(props) {
 
 					<div className="modal-buttons">
 						{onOk && (
-							<button className="modal-button modal-ok" onClick={onOk}>Valider</button>
+							<InputField className="modal-button modal-ok" type="button" value="Valider" onClick={onOk}/>
 						)}
 						{onYes && (
-							<button className="modal-button modal-yes" onClick={onYes}>Oui</button>
+							<InputField className="modal-button modal-yes" type="button" value="Oui" onClick={onYes}/>
 						)}
 						{onCancel && (
-							<button className="modal-button modal-cancel" onClick={onCancel}>Annuler</button>
+							<InputField className="red modal-button modal-cancel" type="button" value="Annuler" onClick={onCancel}/>
 						)}
 						{onNo && (
-							<button className="modal-button modal-no" onClick={onNo}>Non</button>
+							<InputField className="red modal-button modal-no" type="button" value="Non" onClick={onNo}/>
 						)}
 						{(!onOk && !onYes && !onCancel && !onNo) && (
-							<button className="modal-button modal-close" onClick={handleClose}>Fermer</button>
+							<InputField className="modal-button modal-close" type="button" value="Fermer" onClick={handleClose}/>
 						)}
 					</div>
 				</div>

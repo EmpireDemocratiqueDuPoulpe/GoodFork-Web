@@ -5,13 +5,11 @@
   width: 200px;
   height: 280px;
   padding: 10px;
-  background: #EBEBEB;
+  background: #2C2A2A;
   cursor: pointer;
 }
 
-.menu-box:hover {
-  background: #E1E1E1;
-}
+.menu-box:hover { background: #363434; }
 
 /* -- Menu name */
 .mb-name {

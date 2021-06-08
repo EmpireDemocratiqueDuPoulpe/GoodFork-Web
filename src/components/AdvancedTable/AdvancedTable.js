@@ -2,6 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { dateForDisplay } from "../../global/Functions.js";
 import InputField from "../InputField/InputField.js";
+import BoolDisplay from "../BoolDisplay/BoolDisplay.js";
+import { ReactComponent as EditLogo } from "../../assets/images/icons/edit_black_24dp.svg";
+import { ReactComponent as StopEditLogo } from "../../assets/images/icons/do_not_disturb_on_black_24dp.svg";
+import { ReactComponent as DeleteLogo } from "../../assets/images/icons/delete_black_24dp.svg";
 import "./AdvancedTable.css";
 
 class ColumnType {
@@ -14,7 +18,8 @@ class ColumnType {
 		float: "float",
 		bool: "bool",
 		date: "date",
-		select: "select"
+		select: "select",
+		measurementSelect: "measurementSelect"
 	}
 
 	constructor(type) {
@@ -26,6 +31,7 @@ class ColumnType {
 	default() {
 		if (this._type === ColumnType.types.bool) return false;
 		if (this._type === ColumnType.types.number || this._type === ColumnType.types.float) return 0;
+		if (this._type === ColumnType.types.date) return null;
 		else return "";
 	}
 
@@ -42,10 +48,10 @@ class ColumnType {
 		else return null;
 	}
 
-	toText(value) {
-		if (this._type === ColumnType.types.bool) return value ? "Oui" : "Non";
-		if (this._type === ColumnType.types.date) return dateForDisplay(value) ?? "";
-		else return value ?? this.default();
+	toComponent(value) {
+		if (this._type === ColumnType.types.bool) return <BoolDisplay bool={value}/>;
+		if (this._type === ColumnType.types.date) return <React.Fragment>{dateForDisplay(value) ?? ""}</React.Fragment>;
+		else return <React.Fragment>{value ?? this.default()}</React.Fragment>;
 	}
 }
 
@@ -55,6 +61,7 @@ export class Header {
 	_propName = null;
 	_displayPropName = null;
 	_type = new ColumnType(null);
+	_defaultValue = null;
 	_required = null;
 	_readonly = null;
 	_hidden = null;
@@ -69,12 +76,13 @@ export class Header {
 			this._propName = options.propName;
 			this._displayPropName = options.displayPropName;
 			this._type = new ColumnType(options.type);
+			this._defaultValue = options.defaultValue ?? this._type.default();
 			this._required = options.required;
 			this._readonly = options.readonly;
 			this._hidden = options.hidden;
 			this._centered = options.centered;
 
-			if (this._type.name() === "select") {
+			if (this._type.name() === "select" || this._type.name() === "measurementSelect") {
 				this._selectOpts = options.selectOpts;
 			}
 		}
@@ -84,8 +92,9 @@ export class Header {
 	propName = () => this._propName ?? this._title;
 	displayPropName = () => this._displayPropName;
 	type = () => this._type;
+	defaultValue = () => this._defaultValue;
 	inputType = () => this._type.inputType();
-	selectOptions = () => this._type.name() === "select" ? this._selectOpts : null;
+	selectOptions = () => this._selectOpts ?? null;
 	isRequired = () => this._required ?? false;
 	isReadonly = () => this._readonly ?? false;
 	isHidden = () => this._hidden ?? false;
@@ -159,7 +168,7 @@ class AdvancedTable extends React.Component {
 		const { headers } = this.props;
 		const addFields = {};
 
-		const add = header => { addFields[header.propName()] = header.type().default(); };
+		const add = header => { addFields[header.propName()] = header.defaultValue(); };
 
 		headers.forEach(header => {
 			if (header instanceof MixedHeader) {
@@ -209,7 +218,7 @@ class AdvancedTable extends React.Component {
 
 		if (action === "add") {
 			onAdd(addFields);
-			this.setState({ addFields: {} });
+			//this.startRowAddition();
 		} else if (action === "update") {
 			onUpdate(updateFields);
 			this.stopRowUpdate(true);
@@ -251,31 +260,48 @@ class AdvancedTable extends React.Component {
 									{autoID && <td className="at-centered">{rowIndex + 1}</td>}
 									{headers.map((columnHeader, headerIndex) => {
 										let classes = [];
+										const isMixedHeader = columnHeader instanceof MixedHeader;
 
 										if (columnHeader.isHidden()) classes.push("at-hidden");
 										if (columnHeader.isCentered()) classes.push("at-centered");
+										if (isMixedHeader) classes.push("at-multiple-fields");
 
 										return (
 											<td key={headerIndex} className={classes.join(" ")}>
-												{this.renderCell(row, columnHeader, isUpdating)}
+
+												{
+													isMixedHeader
+														? <div>{this.renderCell(row, columnHeader, isUpdating)}</div>
+														: this.renderCell(row, columnHeader, isUpdating)
+												}
 											</td>
 										);
 									})}
 									{showActions && (
 										<td className="at-centered">
-											{onUpdate && (
-												<React.Fragment>
-													{isUpdating ? (
-														<React.Fragment>
-															<InputField form={updateFormId} type="submit" value="Mettre à jour"/>
-															<div className="at-action at-stop-update" onClick={() => this.stopRowUpdate()}/>
-														</React.Fragment>
-													) : (
-														<div className="at-action at-update" onClick={() => this.startRowUpdate(rowIndex)}/>
-													) }
-												</React.Fragment>
-											)}
-											{(onDelete && !isUpdating) && <div className="at-action at-delete" onClick={() => onDelete(row)}/>}
+											<div className="at-actions">
+												{onUpdate && (
+													<React.Fragment>
+														{isUpdating ? (
+															<React.Fragment>
+																<InputField form={updateFormId} type="submit" value="Mettre à jour"/>
+																<div className="at-action at-stop-update" onClick={() => this.stopRowUpdate()}>
+																	<StopEditLogo/>
+																</div>
+															</React.Fragment>
+														) : (
+															<div className="at-action at-update" onClick={() => this.startRowUpdate(rowIndex)}>
+																<EditLogo/>
+															</div>
+														)}
+													</React.Fragment>
+												)}
+												{(onDelete && !isUpdating) && (
+													<div className="at-action at-delete" onClick={() => onDelete(row)}>
+														<DeleteLogo/>
+													</div>
+												)}
+											</div>
 										</td>
 									)}
 								</tr>
@@ -331,9 +357,9 @@ class AdvancedTable extends React.Component {
 		if (header instanceof MixedHeader) {
 			return header.headers.map((subHeader, subIndex) => {
 				return (
-					<React.Fragment key={subIndex}>
+					<span key={subIndex} className={`atmf-item${isUpdating ? "" : " atmf-item-space"}`}>
 						{this.renderCell(row, subHeader, isUpdating)}
-					</React.Fragment>
+					</span>
 				);
 			});
 		} else {
@@ -355,7 +381,7 @@ class AdvancedTable extends React.Component {
 							hidden={header.isHidden()}
 							required={header.isRequired()}
 						/>
-					) : `${cellType.toText(displayData ?? cellData)} `}
+					) : cellType.toComponent(displayData ?? cellData)}
 				</React.Fragment>
 			);
 		}

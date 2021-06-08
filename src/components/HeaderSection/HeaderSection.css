@@ -27,21 +27,22 @@
 /* -- Content */
 .hs-item.hs-title {
   font-weight: bold;
-  background: #DCDCDC;
+  background: #252323;
+  color: #ffbe4f;
 }
 
 .hs-link        { cursor: pointer; }
-.hs-link:hover  { background: #E6E6E6; }
+.hs-link:hover  { background: #393737; }
 .hs-link a {
   display: block;
   width: 100%;
   height: 100%;
-  color: black;
+  color: white;
   text-decoration: none;
 }
 
 /* -- Special classes */
-.hs-current-link a { color: #e79087; }
+.hs-current-link a { color: #ffbe4f; }
 
 .hs-disabled {
   color: #AAAAAA;

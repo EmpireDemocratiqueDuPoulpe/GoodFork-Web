@@ -30,7 +30,12 @@ const config = {
 		units: {
 			getAll: { method: "get", uri: `${API_URI}/units/all` }
 		},
+		measurements: {
+			getAllByTypes: { method: "get", uri: `${API_URI}/measurement/all?ordered=true` },
+			getAllByTypesForStock: { method: "get", uri: `${API_URI}/measurement/all?ordered=true&forStock=true` }
+		},
 		menus: {
+			add: { method: "post", uri: `${API_URI}/menus` },
 			uploadIllustration: { method: "post", uri: `${API_URI}/menus/upload/illustration` },
 			getAll: { method: "get", uri: `${API_URI}/menus/all` },
 			getAllOrderedByType: { method: "get", uri: `${API_URI}/menus/all?orderBy=type_id` },

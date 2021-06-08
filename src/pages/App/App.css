@@ -7,7 +7,7 @@
   justify-items: flex-start;
   align-items: stretch;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 .App-header {
@@ -15,7 +15,7 @@
   flex: 0 0 auto;
   width: 20vw;
   padding: 0 15px;
-  background: #F0F0F0;
+  background: #2f2d2d;
   z-index: 50;
 }
 
@@ -23,7 +23,8 @@
 
 .App-body {
   flex: 1;
-  background: #FAFAFA;
+  background: #201E1E;
+  color: white;
 }
 
 /* -- Pages */
@@ -33,14 +34,14 @@
   justify-content: flex-start;
   align-items: center;
   height: 70px;
-  background-color: #e79087;
-  background-image: linear-gradient(315deg, #e79087 0%, #fcd181 74%);
+  background-color: #F39C2C;
+  color: #2A1D0F;
   -moz-box-shadow: 0 6px 25px -5px rgba(0,0,0,0.19);
   -webkit-box-shadow: 0 6px 25px -5px rgba(0,0,0,0.19);
   box-shadow: 0 6px 25px -5px rgba(0,0,0,0.19);
 }
 
-.Page-header *:first-child { margin-left: 10px; }
+.Page-header > *:first-child { margin-left: 20px; }
 
 .Page-header .Ph-back {
   box-sizing: border-box;
@@ -49,17 +50,23 @@
   line-height: 70px;
   margin: 0 10px 0 0;
   padding: 0 10px;
-  background: #e8bd6d;
+  background: #E48D1D;
   color: black;
   text-decoration: none;
   cursor: pointer;
 }
 .Page-header .Ph-back:not(.Ph-with-text) { font-size: 2em; }
 .Page-header .Ph-back.Ph-with-text::before { content: "<-- "; }
-.Page-header .Ph-back:hover { background: #deb363; }
+.Page-header .Ph-back:hover { background: #DA8313; }
 
 .Page-header h3 {
   margin: 0 5px 0 0;
 }
 
-.Page-body { padding: 20px; }
+.Page-body {
+  box-sizing: border-box;
+  width: 100%;
+  height: calc(100vh - 70px);
+  padding: 20px;
+  overflow-y: auto;
+}

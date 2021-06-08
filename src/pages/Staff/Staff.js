@@ -105,7 +105,6 @@ function Staff() {
 									onAdd={addStaff}
 									onUpdate={updateStaff}
 									onDelete={deleteStaff}
-									centered={true}
 								/>
 							</React.Fragment>
 						) : <ErrorDisplay error={error}/>}

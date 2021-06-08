@@ -14,7 +14,7 @@ function MenuBox(props) {
 				<img src={MenusDB.buildIllustrationURI(menu.image_path)} alt="Illustration du plat"/>
 			</div>
 
-			<p className="mb-description ellipsis-multiline">{menu.description.length > 0 ? menu.description : "Pas de description"}</p>
+			<p className="mb-description ellipsis-multiline">{menu.description && menu.description.length > 0 ? menu.description : "Pas de description"}</p>
 		</div>
 	);
 }

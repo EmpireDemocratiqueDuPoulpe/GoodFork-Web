@@ -5,13 +5,13 @@ import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
 import AdvancedTable, { Header, MixedHeader } from "../../components/AdvancedTable/AdvancedTable.js";
 import withAuth from "../../components/Auth/withAuth.js";
 import StockDB from "../../global/StockDB.js";
-import UnitsDB from "../../global/UnitsDB.js";
+import MeasurementsDB from "../../global/MeasurementsDB.js";
 
 function Stock() {
 	const [ stock, setStock ] = useState();
-	const [ units, setUnits ] = useState();
+	const [ measurements, setMeasurements ] = useState();
 	const [ stockLoaded, setStockLoaded ] = useState(false);
-	const [ unitsLoaded, setUnitsLoaded ] = useState(false);
+	const [ measurementsLoaded, setMeasurementsLoaded ] = useState(false);
 	const [ error, setError ] = useState();
 	const [ errorModal, setErrorModal ] = useState();
 
@@ -31,7 +31,7 @@ function Stock() {
 				setStockLoaded(true);
 				setError(response.error ? response : null);
 
-				if (!response.error) getUnits();
+				if (!response.error) getMeasurements();
 			})
 			.catch(error => {
 				setStock([]);
@@ -58,16 +58,16 @@ function Stock() {
 			.catch(setErrorModal);
 	};
 
-	const getUnits = async () => {
-		UnitsDB.getAllAsSelect()
+	const getMeasurements = async () => {
+		MeasurementsDB.getAllByTypes(true)
 			.then(response => {
-				setUnits(response.error ? null : response);
-				setUnitsLoaded(true);
+				setMeasurements(response.error ? null : response.measurements);
+				setMeasurementsLoaded(true);
 				setError(response.error ? response : null);
 			})
 			.catch(error => {
-				setUnits([]);
-				setUnitsLoaded(true);
+				setMeasurements([]);
+				setMeasurementsLoaded(true);
 				setError(error);
 			});
 	};
@@ -82,7 +82,7 @@ function Stock() {
 
 			<div className="Page-body">
 				<ModalError error={errorModal}/>
-				{stockLoaded && unitsLoaded ? (
+				{stockLoaded && measurementsLoaded ? (
 					<React.Fragment>
 						{!error ? (
 							<React.Fragment>
@@ -95,8 +95,9 @@ function Stock() {
 											new Header("Unité", {
 												propName: "units_unit_id",
 												displayPropName: "units_unit",
-												type: "select",
-												selectOpts: units,
+												type: "measurementSelect",
+												defaultValue: 1,
+												selectOpts: measurements,
 												hideTitle: true
 											})
 										),
@@ -110,7 +111,6 @@ function Stock() {
 									onAdd={addStock}
 									onUpdate={updateStock}
 									onDelete={deleteStock}
-									centered={true}
 								/>
 							</React.Fragment>
 						) : <ErrorDisplay error={error}/>}

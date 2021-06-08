@@ -3,7 +3,9 @@ import { Redirect } from "react-router-dom";
 import MenusDB from "../../global/MenusDB.js";
 import withAuth from "../../components/Auth/withAuth.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
+import { ModalError } from "../../components/Modal/Modal";
 import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
+import CollapsibleSection from "../../components/CollapsibleSection/CollapsibleSection.js";
 import MenuBox from "../../components/MenuBox/MenuBox.js";
 import AddMenuBox from "../../components/MenuBox/AddMenuBox/AddMenuBox.js";
 import "./Menus.css";
@@ -11,10 +13,11 @@ import "./Menus.css";
 function Menus() {
 	const [ menus, setMenus ] = useState([]);
 	const [ menusTypes, setMenusTypes ] = useState([]);
-	const [ clickedMenu, setClickedMenu ] = useState();
 	const [ menusLoaded, setMenusLoaded ] = useState(false);
 	const [ menusTypesLoaded, setMenusTypesLoaded ] = useState(false);
 	const [ error, setError ] = useState();
+	const [ errorModal, setErrorModal ] = useState();
+	const [ redirectTo, setRedirectTo ] = useState();
 
 	const getMenus = async () => {
 		MenusDB.getAll(true)
@@ -48,7 +51,7 @@ function Menus() {
 
 	useEffect(() => { getMenus().catch(console.error); }, []);
 
-	if (clickedMenu) return <Redirect to={`/menu/${clickedMenu.menu_id}`}/>;
+	if (redirectTo) return <Redirect to={redirectTo}/>;
 
 	return (
 		<React.Fragment>
@@ -57,24 +60,19 @@ function Menus() {
 			</div>
 
 			<div className="Page-body">
+				<ModalError error={errorModal}/>
 				{menusLoaded && menusTypesLoaded ? (
 					<React.Fragment>
 						{!error ? (
 							<div className="menus-container">
 								{menusTypes.map((type, typeIndex) => {
 									return (
-										<div className="mc-category" key={typeIndex}>
-											<div className="mc-category-header">
-												<h3 className="capitalize">{type.name}</h3>
-											</div>
-
-											<div className="mc-category-body">
-												{menus.filter(menu => menu.type === type.name).map((menu, menuIndex) => {
-													return <MenuBox key={menuIndex} menu={menu} onClick={setClickedMenu}/>;
-												})}
-												<AddMenuBox/>
-											</div>
-										</div>
+										<CollapsibleSection title={type.name} key={typeIndex}>
+											{menus.filter(menu => menu.type === type.name).map((menu, menuIndex) => {
+												return <MenuBox key={menuIndex} menu={menu} onClick={() => setRedirectTo(`/menu/${menu.menu_id}`)}/>;
+											})}
+											<AddMenuBox type={type.name} onAdded={(menu_id) => setRedirectTo(`/menu/${menu_id}`)} onError={setErrorModal}/>
+										</CollapsibleSection>
 									);
 								})}
 							</div>
