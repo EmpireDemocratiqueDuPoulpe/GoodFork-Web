@@ -9,6 +9,8 @@
   margin-bottom: 20px;
 }
 
+.menu-infos .input-field.field-label { height: 40px; }
+
 .mi-type-description {
   box-sizing: border-box;
   flex: 1;

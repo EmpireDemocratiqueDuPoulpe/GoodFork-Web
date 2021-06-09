@@ -17,7 +17,7 @@
   font-size: 2em;
 }
 
-.pf-price .input-field { height: 50px; }
+.pf-price .input-field { height: 50px !important; }
 .pf-price .input-field input { width: 85px; height: 100%; }
 .pf-price .input-field label { height: auto; margin: 0; }
 

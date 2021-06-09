@@ -14,6 +14,7 @@ import HeaderSection, { SectionItem } from "../../components/HeaderSection/Heade
 import "./App.css";
 
 export default function App() {
+	/* ---- Page content ---------------------------- */
 	return (
 		<Router>
 			<div className="App">
