@@ -14,7 +14,14 @@
 }
 
 /* -- Labels */
-.input-field label { white-space: nowrap; }
+.input-field label {
+  display: block;
+  height: 20px;
+  margin-bottom: 5px;
+  white-space: nowrap;
+}
+
+.input-field.field-label { height: 65px; }
 
 /* -- Inputs */
 .input-field input {
@@ -27,6 +34,8 @@
   border: none;
   border-bottom: 2px #2A2828 solid;
 }
+
+.input-field.field-label input { height: calc(100% - 25px); }
 
 .input-field input:focus,
 .input-field input:active {

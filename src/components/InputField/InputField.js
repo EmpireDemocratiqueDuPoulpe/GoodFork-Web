@@ -151,6 +151,7 @@ function InputField(props) {
 
 	if (error) classes.push("field-error");
 	if (inline) classes.push("field-inline");
+	if (label) classes.push("field-label");
 	if (currentValue) classes.push("field-not-empty");
 	if (className) classes.push(className);
 

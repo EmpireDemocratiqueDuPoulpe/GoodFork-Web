@@ -18,7 +18,8 @@
 }
 
 .pf-price .input-field { height: 50px; }
-.pf-price .input-field input { width: 85px; }
+.pf-price .input-field input { width: 85px; height: 100%; }
+.pf-price .input-field label { height: auto; margin: 0; }
 
 /* Remove arrows on input type number */
 .pf-price .input-field input::-webkit-outer-spin-button, /* Chrome, Safari, Edge, Opera */
