@@ -15,7 +15,7 @@ async function getAllAsSelect() {
 				const rolesAsSelect = [];
 
 				response.roles.forEach(role => {
-					rolesAsSelect.push({ value: role.role_id, text: role.name });
+					rolesAsSelect.push({ value: role.role_id, text: role.display_name ?? role.name });
 				});
 
 				resolve(rolesAsSelect);
