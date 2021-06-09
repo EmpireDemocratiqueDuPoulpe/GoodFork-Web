@@ -6,7 +6,7 @@ import MeasurementsDB from "../../global/MeasurementsDB.js";
 import withAuth from "../../components/Auth/withAuth.js";
 import Modal, { ModalError } from "../../components/Modal/Modal.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
-import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
+import Loader from "../../components/Loader/Loader.js";
 import AdvancedTable, { Header, MixedHeader } from "../../components/AdvancedTable/AdvancedTable.js";
 import InputField from "../../components/InputField/InputField.js";
 import ImageUpload from "../../components/InputField/ImageUpload/ImageUpload.js";
@@ -281,7 +281,7 @@ function MenuDetails(props) {
 							</React.Fragment>
 						) : <ErrorDisplay/>}
 					</React.Fragment>
-				) : <LoadingDisplay/>}
+				) : <Loader/>}
 			</div>
 		</React.Fragment>
 	);

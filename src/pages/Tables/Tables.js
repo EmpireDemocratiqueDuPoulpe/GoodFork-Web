@@ -3,15 +3,17 @@ import withAuth from "../../components/Auth/withAuth.js";
 import TablesDB from "../../global/TablesDB.js";
 import { ModalError } from "../../components/Modal/Modal.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
-import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
+import Loader from "../../components/Loader/Loader.js";
 import AdvancedTable, { Header } from "../../components/AdvancedTable/AdvancedTable.js";
 
 function Tables() {
+	/* ---- States ---------------------------------- */
 	const [ tables, setTables ] = useState();
 	const [ loaded, setLoaded ] = useState(false);
 	const [ error, setError ] = useState();
 	const [ errorModal, setErrorModal ] = useState();
 
+	/* ---- Functions ------------------------------- */
 	const addTable = async table => {
 		TablesDB.add(table)
 			.then(response => {
@@ -55,6 +57,7 @@ function Tables() {
 
 	useEffect(() => { getTables().catch(console.error); }, []);
 
+	/* ---- Page content ---------------------------- */
 	return (
 		<React.Fragment>
 			<div className="Page-header">
@@ -83,7 +86,7 @@ function Tables() {
 							</React.Fragment>
 						) : <ErrorDisplay error={error}/>}
 					</React.Fragment>
-				) : <LoadingDisplay/>}
+				) : <Loader/>}
 			</div>
 		</React.Fragment>
 	);

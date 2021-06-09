@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 export default function NotFound() {
+	/* ---- Page content ---------------------------- */
 	return (
 		<div className="error-box error-404">
 			<span className="error-emoji highlight-font">( ͠° ʖ̯ ͡°)</span>

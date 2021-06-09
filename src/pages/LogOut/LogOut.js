@@ -3,6 +3,7 @@ import useAuth from "../../components/Auth/useAuth.js";
 import withAuth from "../../components/Auth/withAuth.js";
 
 function LogOut() {
+	/* ---- States ---------------------------------- */
 	const { token, delToken, isLoggedIn, setLoggedIn } = useAuth();
 
 	useEffect(() => {
@@ -10,6 +11,7 @@ function LogOut() {
 		if (isLoggedIn) setLoggedIn(false);
 	}, []);
 
+	/* ---- Page content ---------------------------- */
 	return null;
 }
 

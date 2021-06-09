@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { ModalError } from "../../components/Modal/Modal.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
-import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
+import Loader from "../../components/Loader/Loader.js";
 import AdvancedTable, { Header, MixedHeader } from "../../components/AdvancedTable/AdvancedTable.js";
 import withAuth from "../../components/Auth/withAuth.js";
 import StockDB from "../../global/StockDB.js";
 import MeasurementsDB from "../../global/MeasurementsDB.js";
 
 function Stock() {
+	/* ---- States ---------------------------------- */
 	const [ stock, setStock ] = useState();
 	const [ measurements, setMeasurements ] = useState();
 	const [ stockLoaded, setStockLoaded ] = useState(false);
@@ -15,6 +16,7 @@ function Stock() {
 	const [ error, setError ] = useState();
 	const [ errorModal, setErrorModal ] = useState();
 
+	/* ---- Functions ------------------------------- */
 	const addStock = async item => {
 		StockDB.add(item)
 			.then(response => {
@@ -74,6 +76,7 @@ function Stock() {
 
 	useEffect(() => { getAll().catch(console.error); }, []);
 
+	/* ---- Page content ---------------------------- */
 	return (
 		<React.Fragment>
 			<div className="Page-header">
@@ -115,7 +118,7 @@ function Stock() {
 							</React.Fragment>
 						) : <ErrorDisplay error={error}/>}
 					</React.Fragment>
-				) : <LoadingDisplay/>}
+				) : <Loader/>}
 			</div>
 		</React.Fragment>
 	);

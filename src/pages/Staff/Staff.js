@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ModalError } from "../../components/Modal/Modal.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
-import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
+import Loader from "../../components/Loader/Loader.js";
 import AdvancedTable, { Header } from "../../components/AdvancedTable/AdvancedTable.js";
 import withAuth from "../../components/Auth/withAuth.js";
 import UsersDB from "../../global/UsersDB.js";
@@ -9,6 +9,7 @@ import RolesDB from "../../global/RolesDB.js";
 import "./Staff.css";
 
 function Staff() {
+	/* ---- States ---------------------------------- */
 	const [ members, setMembers ] = useState();
 	const [ roles, setRoles ] = useState();
 	const [ membersLoaded, setMembersLoaded ] = useState(false);
@@ -16,6 +17,7 @@ function Staff() {
 	const [ error, setError ] = useState();
 	const [ errorModal, setErrorModal ] = useState();
 
+	/* ---- Functions ------------------------------- */
 	const addStaff = async member => {
 		UsersDB.addStaff(member)
 			.then(response => {
@@ -75,6 +77,7 @@ function Staff() {
 
 	useEffect(() => { getStaff().catch(console.error); }, []);
 
+	/* ---- Page content ---------------------------- */
 	return (
 		<React.Fragment>
 			<div className="Page-header">
@@ -95,7 +98,7 @@ function Staff() {
 										new Header("E-mail", { propName: "email", type: "email", required: true }),
 										new Header("Rôle", {
 											propName: "role_id",
-											displayPropName: "role",
+											displayPropName: "display_role",
 											type: "select",
 											selectOpts: roles,
 											required: true
@@ -109,7 +112,7 @@ function Staff() {
 							</React.Fragment>
 						) : <ErrorDisplay error={error}/>}
 					</React.Fragment>
-				) : <LoadingDisplay/>}
+				) : <Loader/>}
 			</div>
 		</React.Fragment>
 	);

@@ -4,13 +4,14 @@ import MenusDB from "../../global/MenusDB.js";
 import withAuth from "../../components/Auth/withAuth.js";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay.js";
 import { ModalError } from "../../components/Modal/Modal";
-import LoadingDisplay from "../../components/LoadingDisplay/LoadingDisplay.js";
+import Loader from "../../components/Loader/Loader.js";
 import CollapsibleSection from "../../components/CollapsibleSection/CollapsibleSection.js";
 import MenuBox from "../../components/MenuBox/MenuBox.js";
 import AddMenuBox from "../../components/MenuBox/AddMenuBox/AddMenuBox.js";
 import "./Menus.css";
 
 function Menus() {
+	/* ---- States ---------------------------------- */
 	const [ menus, setMenus ] = useState([]);
 	const [ menusTypes, setMenusTypes ] = useState([]);
 	const [ menusLoaded, setMenusLoaded ] = useState(false);
@@ -19,6 +20,7 @@ function Menus() {
 	const [ errorModal, setErrorModal ] = useState();
 	const [ redirectTo, setRedirectTo ] = useState();
 
+	/* ---- Functions ------------------------------- */
 	const getMenus = async () => {
 		MenusDB.getAll(true)
 			.then(response => {
@@ -51,8 +53,8 @@ function Menus() {
 
 	useEffect(() => { getMenus().catch(console.error); }, []);
 
+	/* ---- Page content ---------------------------- */
 	if (redirectTo) return <Redirect to={redirectTo}/>;
-
 	return (
 		<React.Fragment>
 			<div className="Page-header">
@@ -78,7 +80,7 @@ function Menus() {
 							</div>
 						) : <ErrorDisplay error={error}/>}
 					</React.Fragment>
-				) : <LoadingDisplay/>}
+				) : <Loader/>}
 			</div>
 		</React.Fragment>
 	);
