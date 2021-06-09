@@ -32,7 +32,8 @@ const config = {
 		},
 		measurements: {
 			getAllByTypes: { method: "get", uri: `${API_URI}/measurement/all?ordered=true` },
-			getAllByTypesForStock: { method: "get", uri: `${API_URI}/measurement/all?ordered=true&forStock=true` }
+			getAllByTypesForStock: { method: "get", uri: `${API_URI}/measurement/all?ordered=true&forStock=true` },
+			convert: { method: "post", uri: `${API_URI}/measurement/convert` }
 		},
 		menus: {
 			add: { method: "post", uri: `${API_URI}/menus` },

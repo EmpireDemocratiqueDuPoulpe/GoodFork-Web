@@ -33,11 +33,9 @@ function PriceField(props) {
 				/>
 			</div>
 
-			{recommendedPrice !== null ? (
-				<div className="pf-recommended-price">
-					<p>{recommendedPrice} <span className="pf-devise">&euro;</span></p>
-				</div>
-			) : null}
+			<div className="pf-recommended-price">
+				<p>{recommendedPrice ?? "--"} <span className="pf-devise">&euro;</span></p>
+			</div>
 		</div>
 	);
 }
