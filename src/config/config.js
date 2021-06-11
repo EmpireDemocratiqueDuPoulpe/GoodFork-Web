@@ -1,4 +1,3 @@
-// TODO: Change API url to EC2 instance IP
 export const API_URI = "http://localhost:8080/api";
 export const API_FILES_URI = "http://localhost:8080/images";
 
