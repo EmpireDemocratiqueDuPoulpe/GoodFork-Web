@@ -57,6 +57,14 @@ const config = {
 			getAll: { method: "get", uri: `${API_URI}/tables/all` },
 			update: { method: "put", uri: `${API_URI}/tables` },
 			delete: { method: "delete", uri: `${API_URI}/tables` }
+		},
+		stats: {
+			sales: {
+				week: { method: "get", uri: `${API_URI}/stats/sales/week` }
+			},
+			stock: {
+				week: { method: "get", uri: `${API_URI}/stats/stock/week` }
+			}
 		}
 	}
 };

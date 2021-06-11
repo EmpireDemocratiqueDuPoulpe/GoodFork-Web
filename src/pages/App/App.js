@@ -8,6 +8,7 @@ import Stock from "../Stock/Stock.js";
 import Menus from "../Menus/Menus.js";
 import MenuDetails from "../MenuDetails/MenuDetails.js";
 import Tables from "../Tables/Tables.js";
+import Stats from "../Stats/Stats.js";
 import Errors from "../Errors/Errors.js";
 import AppLogo from "../../components/AppLogo/AppLogo.js";
 import HeaderSection, { SectionItem } from "../../components/HeaderSection/HeaderSection.js";
@@ -52,6 +53,7 @@ export default function App() {
 						<Route path="/menus" component={Menus}/>
 						<Route path="/menu/:menu_id" component={MenuDetails}/>
 						<Route path="/tables" component={Tables}/>
+						<Route path="/stats" component={Stats}/>
 						<Route component={Errors.NotFound}/>
 					</Switch>
 				</div>

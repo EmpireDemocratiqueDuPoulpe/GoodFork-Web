@@ -74,3 +74,8 @@ export function dateForField(d) {
 	const offset = date.getTimezoneOffset();
 	return new Date(date.getTime() - (offset * 60 * 1000)).toISOString().slice(0, -14);
 }
+
+export function getNthDate(nthDate){
+	let date = new Date();
+	return new Date(date.setDate(date.getDate() - nthDate));
+}
