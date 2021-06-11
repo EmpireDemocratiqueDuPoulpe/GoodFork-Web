@@ -1,0 +1,14 @@
+/* ---- App logo -------------------------------- */
+/* -- Container */
+.App-logo {
+  display: inline-block;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.App-logo.circular { border-radius: 50%; }
+.App-logo.circular img {
+  max-width: 8%;
+  max-height: 8%;
+}

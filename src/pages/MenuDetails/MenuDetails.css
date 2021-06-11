@@ -1,0 +1,41 @@
+/* ---- Menu details ---------------------------- */
+/* -- Menu infos */
+.menu-infos {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.menu-infos .input-field.field-label { height: 40px; }
+
+.mi-type-description {
+  box-sizing: border-box;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  padding: 10px 0;
+}
+
+.mi-description {
+  flex: 1;
+  margin-top: 10px;
+}
+
+.mi-type-description .mi-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.menu-infos .price-field { flex: 0; }
+
+/* -- Menu content */
+.menu-content h4 { margin: 0 0 15px 0; }

@@ -1,0 +1,35 @@
+/* ---- Stats ----------------------------------- */
+/* -- Sections */
+.chart-section { max-width: 100%; }
+
+/* -- Sections headers */
+.chart-section-header {
+  display: block;
+  width: 100%;
+  margin-bottom:10px;
+  color: white;
+  border-bottom: thin #FFBE4F solid;
+}
+
+.chart-section-title {
+  margin: 0;
+  padding-bottom: 10px;
+}
+
+/* -- Charts */
+.charts-container { width: 100%; }
+
+.chart-box {
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  padding: 20px;
+}
+
+.chart-desc { margin: 0; }
+
+.chart {
+  width: 100%;
+  height: 25vw;
+  color: black;
+}

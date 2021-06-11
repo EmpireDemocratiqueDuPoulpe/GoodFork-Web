@@ -1,0 +1,65 @@
+/* ---- Advanced Table -------------------------- */
+/* -- Table */
+.advanced-table { border-collapse: collapse; }
+.advanced-table.advanced-table-centered { margin: 0 auto; }
+
+/* -- Table head */
+.advanced-table thead {
+  background-color: #F39C2C;
+  color: #2a1d0f;
+}
+
+.advanced-table th {
+  height: 40px;
+  padding: 0 10px;
+}
+
+.at-required-mark { color: #4d3417; }
+
+/* -- Rows */
+.advanced-table tbody tr:nth-child(even) { background: #201E1E; }
+.advanced-table tbody tr:nth-child(odd) { background: #252323; }
+
+.advanced-table tbody tr:nth-child(even):hover,
+.advanced-table tbody tr:nth-child(odd):hover { background: #2F2D2D; }
+
+.at-update-row { background: #2F2D2D !important; }
+
+/* -- Cells */
+.advanced-table td { padding: 5px; }
+.at-hidden { display: none; }
+.at-centered { text-align: center; }
+
+.at-multiple-fields div {
+  display: flex;
+  flex-direction: row;
+  justify-items: center;
+  align-items: center;
+}
+
+.at-multiple-fields .atmf-item-space:not(:last-child) { margin-right: 5px; }
+
+.at-multiple-fields .input-field { display: inline-block; }
+.at-multiple-fields .field-select { width: 40%; }
+
+/* -- Actions */
+.at-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  height: 100%;
+}
+
+.at-action {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.at-update svg { fill: #F39C2C; }
+.at-stop-update svg { fill: #B84526; }
+.at-delete svg { fill: #B84526; }

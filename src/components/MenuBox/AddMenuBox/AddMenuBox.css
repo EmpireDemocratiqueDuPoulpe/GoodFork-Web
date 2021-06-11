@@ -1,0 +1,18 @@
+/* ---- Add menu box ---------------------------- */
+/* -- Container */
+.add-menu-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+/* -- Icon */
+.amb-add-icon {
+  width: 5em;
+  height: 5em;
+  fill: #AFAFAF;
+}
+
+.amb-add-text { color: #AFAFAF; }
