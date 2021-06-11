@@ -108,7 +108,7 @@ function Stats() {
 											<ResponsiveLine
 												data={sales}
 												margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-												xScale={{ type: "time", format: "%Y-%m-%dT%H:%M:%S.%L%Z", precision: "day" }}
+												xScale={{ type: "time", format: "%Y-%m-%dT%H:%M:%S.%L%Z", precision: "day", useUTC: false }}
 												xFormat="time:%H:%M:%S.%L"
 												yScale={{ type: "linear", min: "auto", max: "auto", stacked: true, reverse: false }}
 												yFormat=" >-.2f"
@@ -117,10 +117,11 @@ function Stats() {
 												axisRight={null}
 												axisBottom={{
 													orient: "bottom",
+													tickValues: "every day",
 													tickSize: 5,
 													tickPadding: 5,
 													tickRotation: 0,
-													format: "%m-%d",
+													format: "%d-%m",
 													legend: "Jour",
 													legendOffset: 36,
 													legendPosition: "middle"
@@ -181,7 +182,7 @@ function Stats() {
 													tickSize: 5,
 													tickPadding: 5,
 													tickRotation: 0,
-													format: "%m-%d",
+													format: "%d-%m",
 													legend: "Jour",
 													legendOffset: 36,
 													legendPosition: "middle"
@@ -204,7 +205,32 @@ function Stats() {
 												areaBlendMode="multiply"
 												enableSlices="x"
 												useMesh={true}
-												legends={[]}
+												legends={[
+													{
+														anchor: "right",
+														direction: "column",
+														justify: false,
+														translateX: 100,
+														translateY: 0,
+														itemsSpacing: 0,
+														itemDirection: "left-to-right",
+														itemWidth: 80,
+														itemHeight: 20,
+														itemOpacity: 0.75,
+														symbolSize: 12,
+														symbolShape: "circle",
+														symbolBorderColor: "rgba(0, 0, 0, .5)",
+														effects: [
+															{
+																on: "hover",
+																style: {
+																	itemBackground: "rgba(0, 0, 0, .03)",
+																	itemOpacity: 1
+																}
+															}
+														]
+													}
+												]}
 												theme={nivoTheme}
 											/>
 										</div>
