@@ -19,29 +19,33 @@ export default function App() {
 	return (
 		<Router>
 			<div className="App">
-				{window.location.pathname !== "/login" && (
-					<header className="App-header">
-						<h1>
-							<AppLogo/>
-						</h1>
+				<Switch>
+					<Route render={({ location }) => !["/login"].includes(location.pathname)
+						? (
+							<header className="App-header">
+								<h1>
+									<AppLogo/>
+								</h1>
 
-						<HeaderSection title="Modifier">
-							<SectionItem name="Le staff" link="/staff"/>
-							<SectionItem name="Les tables" link="/tables"/>
-							<SectionItem name="Le menu" link="/menus"/>
-							<SectionItem name="Le stock" link="/stock"/>
-						</HeaderSection>
+								<HeaderSection title="Modifier">
+									<SectionItem name="Le staff" link="/staff"/>
+									<SectionItem name="Les tables" link="/tables"/>
+									<SectionItem name="Le menu" link="/menus"/>
+									<SectionItem name="Le stock" link="/stock"/>
+								</HeaderSection>
 
-						<HeaderSection title="Voir">
-							<SectionItem name="Les statistiques" link="/stats"/>
-						</HeaderSection>
+								<HeaderSection title="Voir">
+									<SectionItem name="Les statistiques" link="/stats"/>
+								</HeaderSection>
 
-						<HeaderSection title="Mon compte">
-							<SectionItem name="Paramètres" link="/settings" disabled={true}/>
-							<SectionItem name="Déconnexion" link="/logout"/>
-						</HeaderSection>
-					</header>
-				)}
+								<HeaderSection title="Mon compte">
+									<SectionItem name="Paramètres" link="/settings" disabled={true}/>
+									<SectionItem name="Déconnexion" link="/logout"/>
+								</HeaderSection>
+							</header>
+						) : null }
+					/>
+				</Switch>
 
 				<div className="App-body">
 					<Switch>
