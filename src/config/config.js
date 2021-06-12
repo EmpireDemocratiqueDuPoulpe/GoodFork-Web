@@ -1,5 +1,7 @@
-export const API_URI = "http://localhost:8080/api";
-export const API_FILES_URI = "http://localhost:8080/images";
+//export const API_URI = "http://localhost:8080/api";
+//export const API_FILES_URI = "http://localhost:8080/images";
+export const API_URI = "http://3.134.79.46:8080/api";
+export const API_FILES_URI = "http://3.134.79.46:8080/images";
 
 const config = {
 	auth: {
