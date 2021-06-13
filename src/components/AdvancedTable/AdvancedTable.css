@@ -1,4 +1,10 @@
 /* ---- Advanced Table -------------------------- */
+/* -- Wrapper */
+.advanced-table-wrapper {
+  display: table;
+  width: auto;
+}
+
 /* -- Table */
 .advanced-table { border-collapse: collapse; }
 .advanced-table.advanced-table-centered { margin: 0 auto; }
@@ -63,3 +69,37 @@
 .at-update svg { fill: #F39C2C; }
 .at-stop-update svg { fill: #B84526; }
 .at-delete svg { fill: #B84526; }
+
+/* -- Pagination */
+.advanced-table-pagination {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.atp-section { flex: 1 1 0; }
+.atp-section.left { text-align: left; }
+.atp-section.middle { text-align: center; }
+.atp-section.right { text-align: right; }
+
+.atp-separator { margin: 0 5px; cursor: default; }
+
+.atp-page-btn,
+.atp-per-page-btn {
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+.atp-page-btn:hover,
+.atp-per-page-btn:hover { color: #F39C2C; }
+
+.atp-page-btn.disabled {
+  color: #7A7A7A;
+  cursor: default;
+}
+
+.atp-per-page-btn.selected { color: #F39C2C; }

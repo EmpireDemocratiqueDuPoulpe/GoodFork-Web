@@ -149,6 +149,11 @@ function AdvancedTable(props) {
 	const [ updFormId, setUpdFormId ] = useState("advanced-table-upd-form");
 	const [ updFields, setUpdFields ] = useState({});
 	const [ updRow, setUpdRow ] = useState(-1);
+	const [ page, setPage ] = useState(0);
+	const [ maxPage, setMaxPage ] = useState(0);
+	const [ perPage, setPerPage ] = useState(
+		parseInt(localStorage.getItem("advanced-table-per-page"), 10) || 20
+	);
 
 	const { headers, data, onAdd, onUpdate, onDelete, autoID, centered } = props;
 	const showAdd = !!onAdd;
@@ -159,6 +164,14 @@ function AdvancedTable(props) {
 		buildFormsIds();
 		startRowAddition();
 	}, []);
+
+	useEffect(() => {
+		setMaxPage(perPage === -1 ? 0 : Math.ceil(data.length / perPage) - 1);
+	}, [data, perPage]);
+
+	useEffect(() => {
+		localStorage.setItem("advanced-table-per-page", perPage.toString());
+	}, [perPage]);
 
 	/* ---- Functions ------------------------------- */
 	const buildFormsIds = () => {
@@ -218,6 +231,15 @@ function AdvancedTable(props) {
 			onUpdate(updFields);
 			stopRowUpdate(true);
 		}
+	};
+
+	const pagination = {
+		lowerBound: () => perPage === -1 ? 0 : page * perPage,
+		upperBound: () => perPage === -1 ? -1 : (page * perPage) + perPage,
+		changePerPage: c => { setPerPage(c); },
+		changePage: p => { setPage(p); },
+		nextPage: () => { page < maxPage && setPage(page + 1); },
+		prevPage: () => { page > 0 && setPage(page - 1); },
 	};
 
 	/* ---- Page content ---------------------------- */
@@ -303,11 +325,11 @@ function AdvancedTable(props) {
 	};
 
 	return (
-		<React.Fragment>
+		<div className={`advanced-table-wrapper ${centered ? "advanced-table-centered" : ""}`}>
 			{showAdd && <form id={addFormId} onSubmit={event => handleSubmit(event, "add")}/>}
 			{!!onUpdate && <form id={updFormId} onSubmit={event => handleSubmit(event, "update")}/>}
 
-			<table className={`advanced-table ${centered ? "advanced-table-centered" : ""}`}>
+			<table className="advanced-table">
 				<thead>
 					<tr>
 						{autoID && <th>-</th>}
@@ -323,7 +345,7 @@ function AdvancedTable(props) {
 				</thead>
 
 				<tbody>
-					{data.map((row, rowIndex) => {
+					{data.slice(pagination.lowerBound(), pagination.upperBound()).map((row, rowIndex) => {
 						const isUpdating = updRow === rowIndex;
 
 						return (
@@ -399,7 +421,27 @@ function AdvancedTable(props) {
 					)}
 				</tbody>
 			</table>
-		</React.Fragment>
+
+			<div className="advanced-table-pagination">
+				<div className="atp-section left"/>
+
+				<div className="atp-section middle">
+					<span className={`atp-page-btn atp-previous${page === 0 ? " disabled" : ""}`} onClick={() => pagination.prevPage()}>&lt; Pr&eacute;c&eacute;dent</span>
+					<span className="atp-separator">-</span>
+					<span className={`atp-page-btn atp-next${page === maxPage ? " disabled" : ""}`}  onClick={() => pagination.nextPage()}>Suivant &gt;</span>
+				</div>
+
+				<div className="atp-section right">
+					<span className={`atp-per-page-btn${perPage === 20 ? " selected" : ""}`} onClick={() => { pagination.changePerPage(20); }}>20</span>
+					<span className="atp-separator">-</span>
+					<span className={`atp-per-page-btn${perPage === 50 ? " selected" : ""}`} onClick={() => { pagination.changePerPage(50); }}>50</span>
+					<span className="atp-separator">-</span>
+					<span className={`atp-per-page-btn${perPage === 100 ? " selected" : ""}`} onClick={() => { pagination.changePerPage(100); }}>100</span>
+					<span className="atp-separator">-</span>
+					<span className={`atp-per-page-btn${perPage === -1 ? " selected" : ""}`} onClick={() => { pagination.changePerPage(-1); }}>Tout</span>
+				</div>
+			</div>
+		</div>
 	);
 }
 
