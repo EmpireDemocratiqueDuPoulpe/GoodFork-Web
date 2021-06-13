@@ -99,7 +99,11 @@
 .input-field textarea::placeholder { color: rgba(255, 255, 255, 0.6); }
 
 /* -- Checkboxes */
-.input-field .input-checkbox { cursor: pointer; }
+.input-field .input-checkbox {
+  cursor: pointer;
+  height: 40px;
+}
+
 .input-field .input-checkbox input[type=checkbox] { display: none; }
 
 /* -- Date */

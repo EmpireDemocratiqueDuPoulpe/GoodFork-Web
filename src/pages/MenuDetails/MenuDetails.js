@@ -22,7 +22,7 @@ async function calculatePrice(menu) {
 		price += convertedQuantity.conversion * ingredient.unit_price;
 	}
 
-	return price;
+	return price.toFixed(2);
 }
 
 function MenuDetails(props) {
