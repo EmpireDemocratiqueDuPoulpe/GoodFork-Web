@@ -20,6 +20,14 @@ async function getWeeklyStock(toChartData = true) {
 		: toChartData ? toMultipleChartData(data, "stats", "day", "units", "name") : data;
 }
 
+async function getWeeklyMenus(toChartData = true) {
+	const data = await sendQuery(api.stats.menus.week);
+
+	return data.error
+		? data
+		: toChartData ? toMultipleChartData(data, "stats", "day", "count", "name") : data;
+}
+
 function toSingleChartData(response, responseProp, xProp, yProp, id = "single") {
 	if (response.error) return response;
 
@@ -58,6 +66,7 @@ function toMultipleChartData(response, responseProp, xProp, yProp, idProp) {
 /* ---- EXPORT ---------------------------------- */
 const StatisticsDB = {
 	sales: { getWeekly: getWeeklySales },
-	stock: { getWeekly: getWeeklyStock }
+	stock: { getWeekly: getWeeklyStock },
+	menus: { getWeekly: getWeeklyMenus }
 };
 export default StatisticsDB;

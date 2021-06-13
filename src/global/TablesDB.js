@@ -8,7 +8,8 @@ async function add(table) {
 	return sendQuery(api.tables.add, { "Content-Type": "application/json" }, {
 		name: table.name,
 		capacity: table.capacity,
-		is_available: table.is_available
+		is_available: table.is_available,
+		can_be_used: table.can_be_used
 	});
 }
 
@@ -23,7 +24,8 @@ async function update(table) {
 		table_id: table.table_id,
 		name: table.name,
 		capacity: table.capacity,
-		is_available: table.is_available
+		is_available: table.is_available,
+		can_be_used: table.can_be_used
 	});
 }
 
