@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { dateForDisplay } from "../../global/Functions.js";
 import InputField from "../InputField/InputField.js";
 import BoolDisplay from "../InputField/BoolDisplay/BoolDisplay.js";
-import { ReactComponent as EditLogo } from "../../assets/images/icons/edit_black_24dp.svg";
-import { ReactComponent as StopEditLogo } from "../../assets/images/icons/do_not_disturb_on_black_24dp.svg";
-import { ReactComponent as DeleteLogo } from "../../assets/images/icons/delete_black_24dp.svg";
+import {ReactComponent as EditLogo} from "../../assets/images/icons/edit_black_24dp.svg";
+import {ReactComponent as StopEditLogo} from "../../assets/images/icons/do_not_disturb_on_black_24dp.svg";
+import {ReactComponent as DeleteLogo} from "../../assets/images/icons/delete_black_24dp.svg";
 import "./AdvancedTable.css";
+
+/*****************************************************
+ * Column types and headers
+ *****************************************************/
 
 class ColumnType {
 	_type = ColumnType.types.default;
@@ -135,37 +139,36 @@ export class MixedHeader {
 	}
 }
 
-// TODO: Paging system
-class AdvancedTable extends React.Component {
-	constructor(props) {
-		super(props);
+/*****************************************************
+ * Advanced table
+ *****************************************************/
+function AdvancedTable(props) {
+	/* ---- States ---------------------------------- */
+	const [ addFormId, setAddFormId ] = useState("advanced-table-add-form");
+	const [ addFields, setAddFields ] = useState({});
+	const [ updFormId, setUpdFormId ] = useState("advanced-table-upd-form");
+	const [ updFields, setUpdFields ] = useState({});
+	const [ updRow, setUpdRow ] = useState(-1);
 
-		this.state = {
-			addFormId: "advanced-table-add-form",
-			addFields: {},
-			updateFormId: "advanced-table-upd-form",
-			updateRow: -1,
-			updateFields: {}
-		};
-	}
+	const { headers, data, onAdd, onUpdate, onDelete, autoID, centered } = props;
+	const showAdd = !!onAdd;
+	const showActions = showAdd || (!!onUpdate || !!onDelete);
 
-	componentDidMount() {
-		this.buildFormsIds();
-		this.startRowAddition();
-	}
+	/* ---- Effects --------------------------------- */
+	useEffect(() => {
+		buildFormsIds();
+		startRowAddition();
+	}, []);
 
-	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
-	buildFormsIds = () => {
+	/* ---- Functions ------------------------------- */
+	const buildFormsIds = () => {
 		const random = (min, max) => Math.floor(Math.random() * (max - min)) + min;
-		const addFormId = `advanced-table-add-form-${random(0, 1000)}`;
-		const updateFormId = `advanced-table-upd-form-${random(0, 1000)}`;
 
-		this.setState({ addFormId: addFormId, updateFormId: updateFormId });
-	}
+		setAddFormId(`advanced-table-add-form-${random(0, 1000)}`);
+		setUpdFormId(`advanced-table-upd-form-${random(0, 1000)}`);
+	};
 
-	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
-	startRowAddition = () => {
-		const { headers } = this.props;
+	const startRowAddition = () => {
 		const addFields = {};
 
 		const add = header => { addFields[header.propName()] = header.defaultValue(); };
@@ -178,167 +181,52 @@ class AdvancedTable extends React.Component {
 			}
 		});
 
-		this.setState({ addFields: addFields });
-	}
+		setAddFields(addFields);
+	};
 
-	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
-	startRowUpdate = index => {
-		const { data } = this.props;
+	const startRowUpdate = index => {
+		setUpdRow(index);
+		setUpdFields(data[index]);
+	};
 
-		this.setState({ updateRow: index, updateFields: data[index] });
-	}
+	const stopRowUpdate = (emptyFields = false) => {
+		setUpdRow(-1);
+		if (emptyFields) setUpdFields({});
+	};
 
-	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
-	stopRowUpdate = (emptyFields = false) => {
-		const newState = { updateRow: -1 };
-		if (emptyFields) newState["updateFields"] = {};
-
-		this.setState(newState);
-	}
-
-	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
-	handleInputChange = (action, fieldName, value) => {
-		const { addFields, updateFields } = this.state;
-
+	const handleInputChange = (action, fieldName, value) => {
 		if (action === "add") {
-			addFields[fieldName] = value;
-			this.setState({ addFields: addFields });
+			const fields = addFields;
+			fields[fieldName] = value;
+
+			setAddFields(fields);
 		} else if (action === "update") {
-			updateFields[fieldName] = value;
-			this.setState({ updateFields: updateFields });
+			const fields = updFields;
+			fields[fieldName] = value;
+
+			setUpdFields(fields);
 		}
-	}
+	};
 
-	/* This is an arrow function to keep access to "this" without binding the function in the constructor */
-	handleSubmit = (event, action) => {
+	const handleSubmit = (event, action) => {
 		event.preventDefault();
-
-		const { addFields, updateFields } = this.state;
-		const { onAdd, onUpdate } = this.props;
 
 		if (action === "add") {
 			onAdd(addFields);
-			//this.startRowAddition();
+			//startRowAddition();
 		} else if (action === "update") {
-			onUpdate(updateFields);
-			this.stopRowUpdate(true);
+			onUpdate(updFields);
+			stopRowUpdate(true);
 		}
-	}
-	
-	render() {
-		const { addFormId, updateFormId, updateRow } = this.state;
-		const { headers, data, onAdd, onUpdate, onDelete, autoID, centered } = this.props;
-		const showAdd = !!onAdd;
-		const showActions = showAdd || (!!onUpdate || !!onDelete);
+	};
 
-		return (
-			<React.Fragment>
-				{showAdd && <form id={addFormId} onSubmit={event => this.handleSubmit(event, "add")}/>}
-				{!!onUpdate && <form id={updateFormId} onSubmit={event => this.handleSubmit(event, "update")}/>}
-
-				<table className={`advanced-table ${centered ? "advanced-table-centered" : ""}`}>
-					<thead>
-						<tr>
-							{autoID && <th>-</th>}
-							{headers.map((header, index) => {
-								return (
-									<th key={index} className={header.isHidden() ? "at-hidden" : ""}>
-										{this.renderHeader(header)}
-									</th>
-								);
-							})}
-							{showActions && <th>Actions</th>}
-						</tr>
-					</thead>
-
-					<tbody>
-						{data.map((row, rowIndex) => {
-							const isUpdating = updateRow === rowIndex;
-
-							return (
-								<tr key={rowIndex} className={isUpdating ? "at-update-row" : ""}>
-									{autoID && <td className="at-centered">{rowIndex + 1}</td>}
-									{headers.map((columnHeader, headerIndex) => {
-										let classes = [];
-										const isMixedHeader = columnHeader instanceof MixedHeader;
-
-										if (columnHeader.isHidden()) classes.push("at-hidden");
-										if (columnHeader.isCentered()) classes.push("at-centered");
-										if (isMixedHeader) classes.push("at-multiple-fields");
-
-										return (
-											<td key={headerIndex} className={classes.join(" ")}>
-
-												{
-													isMixedHeader
-														? <div>{this.renderCell(row, columnHeader, isUpdating)}</div>
-														: this.renderCell(row, columnHeader, isUpdating)
-												}
-											</td>
-										);
-									})}
-									{showActions && (
-										<td className="at-centered">
-											<div className="at-actions">
-												{onUpdate && (
-													<React.Fragment>
-														{isUpdating ? (
-															<React.Fragment>
-																<InputField form={updateFormId} type="submit" value="Mettre à jour"/>
-																<div className="at-action at-stop-update" onClick={() => this.stopRowUpdate()}>
-																	<StopEditLogo/>
-																</div>
-															</React.Fragment>
-														) : (
-															<div className="at-action at-update" onClick={() => this.startRowUpdate(rowIndex)}>
-																<EditLogo/>
-															</div>
-														)}
-													</React.Fragment>
-												)}
-												{(onDelete && !isUpdating) && (
-													<div className="at-action at-delete" onClick={() => onDelete(row)}>
-														<DeleteLogo/>
-													</div>
-												)}
-											</div>
-										</td>
-									)}
-								</tr>
-							);
-						})}
-						{showAdd && (
-							<tr>
-								{autoID && <td/>}
-								{headers.map((columnHeader, headerIndex) => {
-									let classes = [];
-									const isMixedHeader = columnHeader instanceof MixedHeader;
-
-									if (columnHeader.isHidden()) classes.push("at-hidden");
-									if (columnHeader.isCentered()) classes.push("at-centered");
-									if (isMixedHeader) classes.push("at-multiple-fields");
-
-									return (
-										<td key={headerIndex} className={classes.join(" ")}>
-											{isMixedHeader ? <div>{this.renderAddCell(columnHeader)}</div> : this.renderAddCell(columnHeader)}
-										</td>
-									);
-								})}
-								<td><InputField form={addFormId} type="submit" value="Ajouter"/></td>
-							</tr>
-						)}
-					</tbody>
-				</table>
-			</React.Fragment>
-		);
-	}
-
-	renderHeader(header) {
+	/* ---- Page content ---------------------------- */
+	const renderHeader = header => {
 		if (header instanceof MixedHeader) {
 			return header.headers.map((subHeader, subIndex) => {
 				return (
 					<React.Fragment key={subIndex}>
-						{this.renderHeader(subHeader)}
+						{renderHeader(subHeader)}
 					</React.Fragment>
 				);
 			});
@@ -349,16 +237,14 @@ class AdvancedTable extends React.Component {
 				</React.Fragment>
 			);
 		}
-	}
+	};
 
-	renderCell(row, header, isUpdating) {
-		const { updateFormId } = this.state;
-
+	const renderCell = (row, header, isUpdating) => {
 		if (header instanceof MixedHeader) {
 			return header.headers.map((subHeader, subIndex) => {
 				return (
 					<span key={subIndex} className={`atmf-item${isUpdating ? "" : " atmf-item-space"}`}>
-						{this.renderCell(row, subHeader, isUpdating)}
+						{renderCell(row, subHeader, isUpdating)}
 					</span>
 				);
 			});
@@ -371,12 +257,12 @@ class AdvancedTable extends React.Component {
 				<React.Fragment>
 					{isUpdating ? (
 						<InputField
-							form={updateFormId}
+							form={updFormId}
 							type={cellType.inputType()}
 							value={cellData}
 							selectValues={header.selectOptions()}
 							step={cellType.step()}
-							onChange={value => this.handleInputChange("update", header.propName(), value)}
+							onChange={value => handleInputChange("update", header.propName(), value)}
 							readonly={header.isReadonly()}
 							hidden={header.isHidden()}
 							required={header.isRequired()}
@@ -385,18 +271,16 @@ class AdvancedTable extends React.Component {
 				</React.Fragment>
 			);
 		}
-	}
+	};
 
-	renderAddCell(header) {
+	const renderAddCell = header => {
 		if (header.isReadonly()) return null;
-
-		const { addFormId } = this.state;
 
 		if (header instanceof MixedHeader) {
 			return header.headers.map((subHeader, subIndex) => {
 				return (
 					<React.Fragment key={subIndex}>
-						{this.renderAddCell(subHeader)}
+						{renderAddCell(subHeader)}
 					</React.Fragment>
 				);
 			});
@@ -410,13 +294,113 @@ class AdvancedTable extends React.Component {
 					type={cellType.inputType()}
 					selectValues={header.selectOptions()}
 					step={cellType.step()}
-					onChange={value => this.handleInputChange("add", header.propName(), value)}
+					onChange={value => handleInputChange("add", header.propName(), value)}
 					hidden={header.isHidden()}
 					required={header.isRequired()}
 				/>
 			);
 		}
-	}
+	};
+
+	return (
+		<React.Fragment>
+			{showAdd && <form id={addFormId} onSubmit={event => handleSubmit(event, "add")}/>}
+			{!!onUpdate && <form id={updFormId} onSubmit={event => handleSubmit(event, "update")}/>}
+
+			<table className={`advanced-table ${centered ? "advanced-table-centered" : ""}`}>
+				<thead>
+					<tr>
+						{autoID && <th>-</th>}
+						{headers.map((header, index) => {
+							return (
+								<th key={index} className={header.isHidden() ? "at-hidden" : ""}>
+									{renderHeader(header)}
+								</th>
+							);
+						})}
+						{showActions && <th>Actions</th>}
+					</tr>
+				</thead>
+
+				<tbody>
+					{data.map((row, rowIndex) => {
+						const isUpdating = updRow === rowIndex;
+
+						return (
+							<tr key={rowIndex} className={isUpdating ? "at-update-row" : ""}>
+								{autoID && <td className="at-centered">{rowIndex + 1}</td>}
+								{headers.map((columnHeader, headerIndex) => {
+									let classes = [];
+									const isMixedHeader = columnHeader instanceof MixedHeader;
+
+									if (columnHeader.isHidden()) classes.push("at-hidden");
+									if (columnHeader.isCentered()) classes.push("at-centered");
+									if (isMixedHeader) classes.push("at-multiple-fields");
+
+									return (
+										<td key={headerIndex} className={classes.join(" ")}>
+											{
+												isMixedHeader
+													? <div>{renderCell(row, columnHeader, isUpdating)}</div>
+													: renderCell(row, columnHeader, isUpdating)
+											}
+										</td>
+									);
+								})}
+								{showActions && (
+									<td className="at-centered">
+										<div className="at-actions">
+											{onUpdate && (
+												<React.Fragment>
+													{isUpdating ? (
+														<React.Fragment>
+															<InputField form={updFormId} type="submit" value="Mettre à jour"/>
+															<div className="at-action at-stop-update" onClick={() => stopRowUpdate()}>
+																<StopEditLogo/>
+															</div>
+														</React.Fragment>
+													) : (
+														<div className="at-action at-update" onClick={() => startRowUpdate(rowIndex)}>
+															<EditLogo/>
+														</div>
+													)}
+												</React.Fragment>
+											)}
+											{(onDelete && !isUpdating) && (
+												<div className="at-action at-delete" onClick={() => onDelete(row)}>
+													<DeleteLogo/>
+												</div>
+											)}
+										</div>
+									</td>
+								)}
+							</tr>
+						);
+					})}
+					{showAdd && (
+						<tr>
+							{autoID && <td/>}
+							{headers.map((columnHeader, headerIndex) => {
+								let classes = [];
+								const isMixedHeader = columnHeader instanceof MixedHeader;
+
+								if (columnHeader.isHidden()) classes.push("at-hidden");
+								if (columnHeader.isCentered()) classes.push("at-centered");
+								if (isMixedHeader) classes.push("at-multiple-fields");
+
+								return (
+									<td key={headerIndex} className={classes.join(" ")}>
+										{isMixedHeader ? <div>{renderAddCell(columnHeader)}</div> : renderAddCell(columnHeader)}
+									</td>
+								);
+							})}
+							<td><InputField form={addFormId} type="submit" value="Ajouter"/></td>
+						</tr>
+					)}
+				</tbody>
+			</table>
+		</React.Fragment>
+	);
 }
 
 AdvancedTable.propTypes = {
