@@ -76,6 +76,7 @@ function Tables() {
 										new Header("Nom", { propName: "name" }),
 										new Header("Capacité", { propName: "capacity", type: "number", required: true }),
 										new Header("Est disponible", { propName: "is_available", type: "bool", centered: true }),
+										new Header("Peut être utilisée", { propName: "can_be_used", type: "bool", centered: true }),
 									]}
 									data={tables}
 									onAdd={addTable}
