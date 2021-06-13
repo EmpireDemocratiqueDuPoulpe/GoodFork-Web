@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import withAuth from "../../components/Auth/withAuth.js";
 import { dateForDisplay, getNthDate } from "../../global/Functions.js";
 import StatisticsDB from "../../global/StatisticsDB.js";
+//import MenusDB from "../../global/MenusDB.js";
 import Loader from "../../components/Loader/Loader.js";
 import { ResponsiveLine } from "@nivo/line";
+//import { ResponsiveBar } from "@nivo/bar";
 import "./Stats.css";
 
 const nivoTheme = {
@@ -40,12 +42,17 @@ function Stats() {
 	const [ stock, setStock ] = useState([]);
 	const [ stockLoaded, setStockLoaded ] = useState(false);
 	const [ stockError, setStockError ] = useState();
+	const [ menus, setMenus ] = useState([]);
+	//const [ menusNames, setMenusNames ] = useState([]);
+	const [ menusLoaded, setMenusLoaded ] = useState(false);
+	const [ menusError, setMenusError ] = useState();
 	const todayDate = getNthDate(0);
 	const oneWeekDate = getNthDate(6);
 
 	useEffect(() => {
 		getSales().catch(console.error);
 		getStock().catch(console.error);
+		getMenus().catch(console.error);
 	}, []);
 
 	/* ---- Functions ------------------------------- */
@@ -85,6 +92,41 @@ function Stats() {
 			});
 	};
 
+	const getMenus = async () => {
+		StatisticsDB.menus.getWeekly()
+			.then(response => {
+				setMenus(response.error ? null : response.stats);
+				setMenusLoaded(true);
+				setMenusError(response.error ? response : null);
+
+				if (response.error) console.error(response.error);
+				/*else {
+					MenusDB.getAllNames()
+						.then(response => {
+							setMenusNames(response.error ? null : response.menus);
+							setMenusLoaded(true);
+							setMenusError(response.error ? response : null);
+
+							if (response.error) console.error(response.error);
+						})
+						.catch(error => {
+							setMenusNames([]);
+							setMenusLoaded(true);
+							setMenusError(error);
+
+							console.error(error);
+						});
+				}*/
+			})
+			.catch(error => {
+				setMenus([]);
+				setMenusLoaded(true);
+				setMenusError(error);
+
+				console.error(error);
+			});
+	};
+
 	/* ---- Page content ---------------------------- */
 	return (
 		<React.Fragment>
@@ -100,7 +142,7 @@ function Stats() {
 
 					<div className="charts-container">
 						<div className="chart-box">
-							<p className="chart-desc">Bénéfices des ventes du {dateForDisplay(todayDate)} au {dateForDisplay(oneWeekDate)} :</p>
+							<p className="chart-desc">Bénéfices des ventes du {dateForDisplay(oneWeekDate)} au {dateForDisplay(todayDate)} :</p>
 							{salesLoaded ? (
 								<React.Fragment>
 									{!salesError ? (
@@ -162,7 +204,7 @@ function Stats() {
 
 					<div className="charts-container">
 						<div className="chart-box">
-							<p className="chart-desc">Quantité des stocks du {dateForDisplay(todayDate)} au {dateForDisplay(oneWeekDate)} :</p>
+							<p className="chart-desc">Quantité des stocks du {dateForDisplay(oneWeekDate)} au {dateForDisplay(todayDate)} :</p>
 							{stockLoaded ? (
 								<React.Fragment>
 									{!stockError ? (
@@ -231,6 +273,68 @@ function Stats() {
 														]
 													}
 												]}
+												theme={nivoTheme}
+											/>
+										</div>
+									) : <p>Erreur pendant le chargement.</p>}
+								</React.Fragment>
+							) : <Loader/>}
+						</div>
+					</div>
+				</div>
+
+				<div className="chart-section">
+					<div className="chart-section-header">
+						<h3 className="chart-section-title">Menus</h3>
+					</div>
+
+					<div className="charts-container">
+						<div className="chart-box">
+							<p className="chart-desc">Popularité des menus du {dateForDisplay(oneWeekDate)} au {dateForDisplay(todayDate)} :</p>
+							{menusLoaded ? (
+								<React.Fragment>
+									{!menusError ? (
+										<div className="chart menus-chart">
+											<ResponsiveLine
+												data={menus}
+												margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+												xScale={{ type: "time", format: "%Y-%m-%dT%H:%M:%S.%L%Z", precision: "day", useUTC: false }}
+												xFormat="time:%H:%M:%S.%L"
+												yScale={{ type: "linear", min: "auto", max: "auto", stacked: true, reverse: false }}
+												yFormat=" >-.2f"
+												curve="monotoneX"
+												axisTop={null}
+												axisRight={null}
+												axisBottom={{
+													orient: "bottom",
+													tickValues: "every day",
+													tickSize: 5,
+													tickPadding: 5,
+													tickRotation: 0,
+													format: "%d-%m",
+													legend: "Jour",
+													legendOffset: 36,
+													legendPosition: "middle"
+												}}
+												axisLeft={{
+													orient: "left",
+													tickSize: 5,
+													tickPadding: 5,
+													tickRotation: 0,
+													legend: "Commandes",
+													legendOffset: -40,
+													legendPosition: "middle"
+												}}
+												pointSize={10}
+												pointColor={{ theme: "background" }}
+												pointBorderWidth={2}
+												pointBorderColor={{ from: "serieColor" }}
+												enablePointLabel={true}
+												pointLabelYOffset={-12}
+												areaBlendMode="multiply"
+												enableSlices="x"
+												useMesh={true}
+												legends={[]}
 												theme={nivoTheme}
 											/>
 										</div>

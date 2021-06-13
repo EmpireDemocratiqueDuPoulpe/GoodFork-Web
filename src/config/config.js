@@ -41,6 +41,7 @@ const config = {
 			uploadIllustration: { method: "post", uri: `${API_URI}/menus/upload/illustration` },
 			getAll: { method: "get", uri: `${API_URI}/menus/all` },
 			getAllOrderedByType: { method: "get", uri: `${API_URI}/menus/all?orderBy=type_id` },
+			getAllNames: { method: "get", uri: `${API_URI}/menus/names/all` },
 			getById: { method: "get", uri: `${API_URI}/menus` },
 			update: { method: "put", uri: `${API_URI}/menus` },
 			delete: { method: "delete", uri: `${API_URI}/menus` }
@@ -65,6 +66,9 @@ const config = {
 			},
 			stock: {
 				week: { method: "get", uri: `${API_URI}/stats/stock/week` }
+			},
+			menus: {
+				week: { method: "get", uri: `${API_URI}/stats/menus/week` }
 			}
 		}
 	}

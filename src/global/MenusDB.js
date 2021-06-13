@@ -34,6 +34,10 @@ async function getAll(orderedByType = false) {
 	return sendQuery(orderedByType ? api.menus.getAllOrderedByType : api.menus.getAll);
 }
 
+async function getAllNames() {
+	return sendQuery(api.menus.getAllNames);
+}
+
 async function getById(menu_id) {
 	return sendQuery(api.menus.getById, null, null, menu_id);
 }
@@ -104,6 +108,7 @@ const MenusDB = {
 	uploadIllustration,
 	addIngredient,
 	getAll,
+	getAllNames,
 	getById,
 	getTypes,
 	getTypesAsSelect,
