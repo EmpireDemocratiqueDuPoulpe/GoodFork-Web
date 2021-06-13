@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { dateForDisplay } from "../../global/Functions.js";
 import InputField from "../InputField/InputField.js";
-import BoolDisplay from "../BoolDisplay/BoolDisplay.js";
+import BoolDisplay from "../InputField/BoolDisplay/BoolDisplay.js";
 import { ReactComponent as EditLogo } from "../../assets/images/icons/edit_black_24dp.svg";
 import { ReactComponent as StopEditLogo } from "../../assets/images/icons/do_not_disturb_on_black_24dp.svg";
 import { ReactComponent as DeleteLogo } from "../../assets/images/icons/delete_black_24dp.svg";

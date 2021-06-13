@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { dateForField } from "../../global/Functions.js";
-import BoolDisplay from "../BoolDisplay/BoolDisplay.js";
+import BoolDisplay from "./BoolDisplay/BoolDisplay.js";
 import MeasurementSelect from "./MeasurementSelect/MeasurementSelect.js";
 import "./InputField.css";
 
