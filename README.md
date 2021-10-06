@@ -11,6 +11,7 @@ Après avoir décompressé ce répertoire, il vous suffira d'exécuter `npm inst
 *After unzipping this repository, you simple need to run `npm install` and then `npm start`. Don't forget to change the API URL accordingly to your setup in [config.js](https://github.com/EmpireDemocratiqueDuPoulpe/goodfork-web/blob/main/src/config/config.js).*
 
 ## Bugs connus / Known bugs
-Lors du rechargement de la page après la connexion ou la déconnexion, l'affichage ne se met pas entièrement à jour et cela nécessite de recharger manuellement la page une seconde fois.
+- Lors du rechargement de la page après la connexion ou la déconnexion, l'affichage ne se met pas entièrement à jour et cela nécessite de recharger manuellement la page une seconde fois.
 
-***[Eng]** When the website reloads the page after logging in/out, the display doesn't fully update. The user must manually reload the page.*
+***[Eng]***
+- *When the website reloads the page after logging in/out, the display doesn't fully update. The user must manually reload the page.*
